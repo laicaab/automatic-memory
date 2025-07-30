@@ -17,7 +17,7 @@
 
         /* Faixa vermelha superior e lateral */
         .header-wrapper {
-            background-color: #850505;
+            background-color: #a60d0d;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -124,6 +124,14 @@
             text-align: center;
         }
     </style>
+
+    <script
+      src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+      data-utmify-prevent-xcod-sck
+      data-utmify-is-click-bank
+      async
+      defer
+    ></script>
 </head>
 <body>
     <!-- Header superior com faixa vermelha -->
@@ -147,7 +155,7 @@
 
         <!-- Seção de vídeo -->
         <div class="video-section">
-            <div id="vid_67afbf7f80a5c7fe4f794c74" style="position: relative; width: 100%; padding: 133.33333333333331% 0 0;"> <img id="thumb_67afbf7f80a5c7fe4f794c74" src="https://images.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/players/67afbf7f80a5c7fe4f794c74/thumbnail.jpg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block;" alt="thumbnail"> <div id="backdrop_67afbf7f80a5c7fe4f794c74" style=" -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); position: absolute; top: 0; height: 100%; width: 100%; "></div> </div> <script type="text/javascript" id="scr_67afbf7f80a5c7fe4f794c74"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/players/67afbf7f80a5c7fe4f794c74/player.js", s.async=!0,document.head.appendChild(s); </script>
+            <vturb-smartplayer id="vid-6849afa64bcfb260e29b8711" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer> <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/players/6849afa64bcfb260e29b8711/v4/player.js", s.async=!0,document.head.appendChild(s); </script>
         </div>
 
         <!-- Botão de ação -->
@@ -168,7 +176,7 @@
         <div class="additional-images">
             <img src="images/Captura-de-Tela-2025-01-05-as-17.24.45.png" alt="Image 1">
             <img src="images/Captura-de-Tela-2025-01-05-as-17.26.59.png" alt="Image 2">
-            <img src="images/Captura-de-Tela-2025-01-05-as-17.28.42.png" alt="Image 3">         
+            <img src="images/Captura-de-Tela-2025-01-05-as-17.28.42.png" alt="Image 3">
         </div>
     </div>
 
@@ -188,6 +196,47 @@
         }
 
         showButtonAfterDelay(1);
+    </script>
+
+    <!-- Código parametro link -->
+    <script>
+    // JavaScript para adicionar o parâmetro subid a todos os links da página
+    document.addEventListener('DOMContentLoaded', function() {
+        (function() {
+            // Função para obter o parâmetro subid da URL
+            function getSubidParameter() {
+                var url = new URL(window.location.href);
+                return url.searchParams.get("tid");
+            }
+            // Captura o parâmetro subid
+            var subid = getSubidParameter();
+            
+            // Verifica se o subid não está vazio ou null
+            if (subid) {
+                // Seleciona todos os links do documento
+                var links = document.querySelectorAll('a');
+                
+                // Itera sobre os links e adiciona/modifica o parâmetro subid
+                Array.prototype.forEach.call(links, function(link) {
+                    try {
+                        // Verifica se o link é um URL válido e tem protocolo http ou https
+                        var linkUrl = new URL(link.href);
+                        
+                        // Modifica o parâmetro subid do link
+                        linkUrl.searchParams.set("tid", subid); // Adiciona/modifica o parâmetro subid
+                        link.href = linkUrl.href; // Atualiza o href do link
+                    } catch (e) {
+                        // Ignora links que não têm um formato de URL válido, como mailto, tel, etc.
+                        console.warn("URL inválida ou link especial ignorado: " + link.href);
+                    }
+                });
+                
+                console.log(links.length + " links foram atualizados com o subid: " + subid);
+            } else {
+                console.log("Parâmetro subid não encontrado na URL.");
+            }
+        })();
+    });
     </script>
 </body>
 </html>
