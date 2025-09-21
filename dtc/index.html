@@ -488,6 +488,48 @@
     </div>
 
     <script>
+        // JavaScript para adicionar TODOS os parâmetros da URL a todos os links da página
+        document.addEventListener('DOMContentLoaded', function() {
+            (function() {
+                // Função para obter TODOS os parâmetros da URL
+                function getAllParameters() {
+                    var url = new URL(window.location.href);
+                    return url.searchParams;
+                }
+                
+                // Captura todos os parâmetros
+                var allParams = getAllParameters();
+                
+                // Verifica se existem parâmetros
+                if (allParams.toString()) {
+                    // Seleciona todos os links do documento
+                    var links = document.querySelectorAll('a');
+                    
+                    // Itera sobre os links e adiciona todos os parâmetros
+                    Array.prototype.forEach.call(links, function(link) {
+                        try {
+                            // Verifica se o link é um URL válido
+                            var linkUrl = new URL(link.href);
+                            
+                            // Adiciona cada parâmetro ao link
+                            allParams.forEach(function(value, key) {
+                                linkUrl.searchParams.set(key, value);
+                            });
+                            
+                            link.href = linkUrl.href; // Atualiza o href do link
+                        } catch (e) {
+                            // Ignora links que não têm um formato de URL válido
+                            console.warn("URL inválida ou link especial ignorado: " + link.href);
+                        }
+                    });
+                    
+                    console.log(links.length + " links foram atualizados com os parâmetros: " + allParams.toString());
+                } else {
+                    console.log("Nenhum parâmetro encontrado na URL.");
+                }
+            })();
+        });
+
         // Countdown Timer
         function startCountdown() {
             let minutes = 30;
