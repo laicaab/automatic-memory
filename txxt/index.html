@@ -14,6 +14,14 @@
     <meta property="og:description" content="BrainClear">
     <meta property="og:image" content="https://cdn.jsdelivr.net/gh/laicaab/automatic-memory/memo/images/uyZm6N0Fij4b.png">
     
+    <script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
+    <link rel="preload" href="https://scripts.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/ab-test/698e829744e6bfed356e03f9/player.js" as="script">
+    <link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
+    <link rel="dns-prefetch" href="https://cdn.converteai.net">
+    <link rel="dns-prefetch" href="https://scripts.converteai.net">
+    <link rel="dns-prefetch" href="https://images.converteai.net">
+    <link rel="dns-prefetch" href="https://m3u8.vturb.net">
+    <link rel="dns-prefetch" href="https://api.vturb.com.br">
     <script
       src="https://cdn.utmify.com.br/scripts/utms/latest.js"
       data-utmify-prevent-xcod-sck
@@ -41,7 +49,6 @@
         .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 15px; }
         .section { padding: 20px 0; }
         .text-center { text-align: center; }
-        .hidden { display: none; } /* Classe auxiliar */
         
         /* A classe usada pelo script do VTurb para esconder a oferta */
         .esconder { display: none; }
@@ -231,7 +238,7 @@
             </p>
 
             <div class="video-container">
-                <vturb-smartplayer id="vid-691a0d77bb9b1aec29fc5281" style="display:block;margin:0 auto;width:100%;max-width:400px"></vturb-smartplayer>
+                <vturb-smartplayer id="ab-698e829744e6bfed356e03f9" style="display: block; margin: 0 auto; width: 100%; "></vturb-smartplayer>
             </div>
 
             <div class="image-container">
@@ -455,11 +462,11 @@
         </div>
     </footer>
 
-    <script>
-        // Video player script
-        var s = document.createElement("script");
-        s.src = "https://scripts.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/players/691a0d77bb9b1aec29fc5281/v4/player.js";
-        s.async = true;
+    <script type="text/javascript">
+        // A/B Test Loader
+        var s=document.createElement("script");
+        s.src="https://scripts.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/ab-test/698e829744e6bfed356e03f9/player.js",
+        s.async=!0,
         document.head.appendChild(s);
 
         // Countdown timer function
@@ -523,97 +530,94 @@
     </script>
 
     <script type="text/javascript">
-    // --- SUA CONFIGURAÇÃO ---
-    // Certifique-se que estes IDs são os IDs dos VÍDEOS INDIVIDUAIS, não do teste.
-    const vturbVideos = [
-        {
-            videoId: "691a0d77bb9b1aec29fc5281", // ID do Vídeo A
-            delayInSeconds: 7, // 7 segundos para teste
-            utm: "utm_content=prostatev2"
-        },
-        {
-            videoId: "698e111d7a04c8d380d44955", // ID do Vídeo B
-            delayInSeconds: 7, // 7 segundos para teste
-            utm: "utm_content=urofwv3"
-        }
-    ];
-    
-    // --- LÓGICA DO SISTEMA ---
-    const CLASS_TO_DISPLAY = ".esconder"; 
-    let offerDisplayed = false; // Trava para não executar mil vezes
-
-    function showOffer(utmParam) {
-        if(offerDisplayed) return; // Se já mostrou, não faz nada
+        // --- SUA CONFIGURAÇÃO ---
+        const vturbVideos = [
+            {
+                videoId: "691a0d77bb9b1aec29fc5281", // ID do Vídeo A
+                delayInSeconds: 7, // 7 segundos para teste (ALTERE PARA 600 em PROD)
+                utm: "utm_content=prostatev2"
+            },
+            {
+                videoId: "698e111d7a04c8d380d44955", // ID do Vídeo B
+                delayInSeconds: 7, // 7 segundos para teste (ALTERE PARA 600 em PROD)
+                utm: "utm_content=urofwv3"
+            }
+        ];
         
-        // Mostra a seção
-        const elements = document.querySelectorAll(CLASS_TO_DISPLAY);
-        elements.forEach(el => el.style.display = "block");
-        
-        // Atualiza os links
-        if(utmParam) {
-            const links = document.querySelectorAll(CLASS_TO_DISPLAY + " a");
-            links.forEach(link => {
-                if(!link.href.includes(utmParam)) { 
-                    const separator = link.href.includes("?") ? "&" : "?";
-                    link.href += separator + utmParam;
-                }
-            });
-        }
-        console.log("✅ OFERTA LIBERADA! Parametro aplicado: " + utmParam);
-        offerDisplayed = true;
-    }
+        // --- LÓGICA DO SISTEMA ---
+        const CLASS_TO_DISPLAY = ".esconder"; 
+        let offerDisplayed = false; // Trava para não executar mil vezes
 
-    function checkVturb() {
-        // Verifica se o player carregou
-        if (!window.smartplayer || !window.smartplayer.instances) {
-            setTimeout(checkVturb, 500); 
-            return;
-        }
-
-        // Pega as CHAVES do objeto instances (que são os IDs no formato 'vid-XXXX')
-        const instanceKeys = Object.keys(window.smartplayer.instances);
-        
-        if (instanceKeys.length === 0) {
-            setTimeout(checkVturb, 500);
-            return;
-        }
-
-        // Itera sobre as chaves encontradas
-        instanceKeys.forEach(key => {
-            const instance = window.smartplayer.instances[key];
+        function showOffer(utmParam) {
+            if(offerDisplayed) return; // Se já mostrou, não faz nada
             
-            // Limpa o 'vid-' da chave para pegar o ID puro
-            const currentId = key.replace("vid-", "");
+            // Mostra a seção
+            const elements = document.querySelectorAll(CLASS_TO_DISPLAY);
+            elements.forEach(el => el.style.display = "block");
             
-            // Procura esse ID na sua lista
-            const config = vturbVideos.find(v => v.videoId === currentId);
+            // Atualiza os links
+            if(utmParam) {
+                const links = document.querySelectorAll(CLASS_TO_DISPLAY + " a");
+                links.forEach(link => {
+                    if(!link.href.includes(utmParam)) { 
+                        const separator = link.href.includes("?") ? "&" : "?";
+                        link.href += separator + utmParam;
+                    }
+                });
+            }
+            console.log("✅ OFERTA LIBERADA! Parametro aplicado: " + utmParam);
+            offerDisplayed = true;
+        }
 
-            if (!config) {
-                // Se não achou pelo ID da chave, tenta buscar pelo ID interno do vídeo (fallback)
-                // Isso resolve casos onde o ID do player é diferente do ID do vídeo
-                return; 
+        function checkVturb() {
+            // Verifica se o player carregou
+            if (!window.smartplayer || !window.smartplayer.instances) {
+                setTimeout(checkVturb, 500); 
+                return;
             }
 
-            console.log("🚀 Monitorando Player: " + currentId + " | Delay: " + config.delayInSeconds + "s");
+            // Pega as CHAVES do objeto instances (que são os IDs no formato 'vid-XXXX')
+            const instanceKeys = Object.keys(window.smartplayer.instances);
+            
+            if (instanceKeys.length === 0) {
+                setTimeout(checkVturb, 500);
+                return;
+            }
 
-            // Verifica o tempo
-            instance.on("timeupdate", () => {
-                if(offerDisplayed) return; // Economiza processamento
+            // Itera sobre as chaves encontradas
+            instanceKeys.forEach(key => {
+                const instance = window.smartplayer.instances[key];
                 
-                // Tenta pegar o tempo atual de forma segura
-                let currentTime = 0;
-                if(instance.video) currentTime = instance.video.currentTime;
-                else if(instance.player) currentTime = instance.player.currentTime;
+                // Limpa o 'vid-' da chave para pegar o ID puro
+                const currentId = key.replace("vid-", "");
+                
+                // Procura esse ID na sua lista
+                const config = vturbVideos.find(v => v.videoId === currentId);
 
-                if (currentTime >= config.delayInSeconds) {
-                    showOffer(config.utm);
+                if (!config) {
+                    return; 
                 }
-            });
-        });
-    }
 
-    // Inicia
-    document.addEventListener("DOMContentLoaded", checkVturb);
-</script>
+                console.log("🚀 Monitorando Player: " + currentId + " | Delay: " + config.delayInSeconds + "s");
+
+                // Verifica o tempo
+                instance.on("timeupdate", () => {
+                    if(offerDisplayed) return; // Economiza processamento
+                    
+                    // Tenta pegar o tempo atual de forma segura
+                    let currentTime = 0;
+                    if(instance.video) currentTime = instance.video.currentTime;
+                    else if(instance.player) currentTime = instance.player.currentTime;
+
+                    if (currentTime >= config.delayInSeconds) {
+                        showOffer(config.utm);
+                    }
+                });
+            });
+        }
+
+        // Inicia
+        document.addEventListener("DOMContentLoaded", checkVturb);
+    </script>
 </body>
 </html>
