@@ -825,7 +825,6 @@
 </head>
 
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
@@ -839,14 +838,12 @@
         </div>
     </header>
 
-    <!-- Banner -->
     <section class="banner">
         <div class="banner-text">
             DAILY UPDATES ON WELLNESS AND HEALTH - DAILY UPDATES ON WELLNESS AND HEALTH -
         </div>
     </section>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <h1 class="hero-title text-center">
@@ -857,19 +854,16 @@
                 <span class="current-date">06/11/2025</span> - Updated 2 hours ago
             </p>
 
-            <!-- Video Container -->
             <div class="video-container">
-                <vturb-smartplayer id="vid-698f6662ceb26906d005e594" style="display:block;margin:0 auto;width:100%;max-width:400px"></vturb-smartplayer>
+                <vturb-smartplayer id="vid-698e111d7a04c8d380d44955" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer> <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/players/698e111d7a04c8d380d44955/v4/player.js", s.async=!0,document.head.appendChild(s); </script>
             </div>
 
-            <!-- Image -->
             <div class="image-container">
                 <img src="images/nhwWVFrm3seI.webp" alt="BrainClear" loading="eager">
             </div>
         </div>
     </section>
 
-    <!-- Comments Section (inicialmente visível, movida para o final após delay) -->
     <section class="comments-section" id="comments-section">
         <div class="comments-header">
             <p class="comments-title">Showing 16 of 552 comments</p>
@@ -1005,12 +999,10 @@
         <p class="comments-closed">This post is no longer receiving comments!</p>
     </section>
 
-    <!-- Stock Alert -->
     <section class="stock-alert hidden" id="stock-section">
         <h1>Last Bottles Left: <span class="number">84</span></h1>
     </section>
 
-    <!-- Rating Section -->
     <section class="rating-section hidden" id="rating-section">
         <div class="rating-title">Our Customers Say</div>
         <div class="rating-stars">
@@ -1036,14 +1028,12 @@
         <div class="rating-count">Based on 79,200+ reviews!</div>
     </section>
 
-    <!-- Pricing Section -->
     <section class="pricing-section hidden" id="pricing-section">
         <div class="container">
             <h2 class="pricing-title">Get UroFlow at a Discount</h2>
             <h3 class="pricing-subtitle">Before It's Gone!</h3>
             <p class="pricing-note">This discount expires in:</p>
 
-            <!-- Countdown Timer -->
             <div class="countdown" id="countdown">
                 <div class="countdown-item">
                     <div class="countdown-number" id="minutes">00</div>
@@ -1055,8 +1045,6 @@
                 </div>
             </div>
 
-            <!-- Product Cards -->
-            <!-- 6 Bottles -->
             <div class="product-card">
                 <h3 class="product-title">6 Bottles</h3>
                 <p class="product-subtitle">6-Month treatment</p>
@@ -1081,7 +1069,6 @@
                 </div>
             </div>
 
-            <!-- 3 Bottles -->
             <div class="product-card">
                 <h3 class="product-title">3 Bottles</h3>
                 <p class="product-subtitle">3-Month treatment</p>
@@ -1106,7 +1093,6 @@
                 </div>
             </div>
 
-            <!-- 2 Bottles -->
             <div class="product-card">
                 <h3 class="product-title">2 Bottles</h3>
                 <p class="product-subtitle">2-Month treatment</p>
@@ -1133,7 +1119,6 @@
         </div>
     </section>
 
-    <!-- Testimonials Section -->
     <section class="testimonials-section hidden" id="testimonials-section">
         <div class="container">
             <h2 class="testimonials-title">What People Are Saying About <span class="brand">UroFlow</span></h2>
@@ -1148,7 +1133,6 @@
         </div>
     </section>
 
-    <!-- Guarantee Section -->
     <section class="guarantee-section hidden" id="guarantee-section">
         <h2 class="guarantee-title">100% Satisfaction or Your Money Back</h2>
         <h3 class="guarantee-days">180 DAYS GUARANTEE</h3>
@@ -1166,26 +1150,20 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p class="footer-text">All Rights Reserved © 2025</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script>
         // ============================================
         // CONFIGURAÇÃO: TEMPO DE DELAY EM SEGUNDOS
         // ============================================
-        const DELAY_SECONDS = 2200; // <-- MUDE AQUI: 180 segundos = 3 minutos
+        // ATENÇÃO: Seu comentário diz 180 segundos (3 min), mas a variável está 2200 (36 min).
+        // Isso pode MATAR sua conversão se não for ajustado.
+        const DELAY_SECONDS = 2200; 
         // ============================================
-
-        // Video player script
-        var s = document.createElement("script");
-        s.src = "https://scripts.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/players/698f6662ceb26906d005e594/v4/player.js";
-        s.async = true;
-        document.head.appendChild(s);
 
         // Show hidden sections and move comments to end after delay
         setTimeout(function() {
@@ -1240,7 +1218,6 @@
         dateElements.forEach(el => el.textContent = dateString);
     </script>
 
-    <!-- Código parametro link -->
     <script>
     // JavaScript para adicionar o parâmetro subid a todos os links da página
     document.addEventListener('DOMContentLoaded', function() {
