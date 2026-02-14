@@ -1119,37 +1119,6 @@
         </div>
     </section>
 
-    <section class="testimonials-section hidden" id="testimonials-section">
-        <div class="container">
-            <h2 class="testimonials-title">What People Are Saying About <span class="brand">UroFlow</span></h2>
-            <h3 class="testimonials-subtitle">Real Life-Changing Results!</h3>
-            <h4 class="text-center" style="font-size: 20px; margin: 20px 0;">Top reviews from United States:</h4>
-
-            <div class="testimonial-images">
-                <img src="images/nRXow0OgjfTD.png" alt="Testimonial 1">
-                <img src="images/30WjdnUKN41K.png" alt="Testimonial 2">
-                <img src="images/DwTEKayn2HZz.png" alt="Testimonial 3">
-            </div>
-        </div>
-    </section>
-
-    <section class="guarantee-section hidden" id="guarantee-section">
-        <h2 class="guarantee-title">100% Satisfaction or Your Money Back</h2>
-        <h3 class="guarantee-days">180 DAYS GUARANTEE</h3>
-        <div class="guarantee-badge">
-            <img src="images/QNCDFBEAHVDI.png" alt="Guarantee Badge">
-        </div>
-        <div class="guarantee-text">
-            <p>We're so confident you'll feel a real difference that we back Uroflow with a 180-day, 100% satisfaction guarantee.</p>
-            <p>In just a few days, you may notice fewer nighttime bathroom trips, a steadier urinary flow, less urgency and dribbling, and greater day-to-day comfort. Stick with it for a few weeks or months and you could experience truly life-enhancing results — more restful nights, better control, and renewed confidence in your male wellness.</p>
-            <p>And if at any point within those 180 DAYS you don't feel Uroflow is delivering meaningful support — if your nights aren't easier, your flow doesn't feel more consistent, or you're simply not satisfied — just contact us. We'll refund every penny, no questions asked.</p>
-            <p>You don't even need to return the bottles — they're yours to keep, completely free of charge, as our thank-you for giving Uroflow a try.</p>
-        </div>
-        <div class="payment-icons">
-            <img src="images/DmSZbbRHWoGx.webp" alt="Payment Methods">
-        </div>
-    </section>
-
     <footer class="footer">
         <div class="container">
             <p class="footer-text">All Rights Reserved © 2025</p>
@@ -1261,14 +1230,13 @@
         // INTEGRAÇÃO VTURB A/B - RASTREAMENTO DE VSL
         // ==========================================
         
-        // 1. Configure aqui os IDs e Nomes
-        // ATENÇÃO: SUBSTITUA OS IDs ABAIXO PELOS REAIS DO SEU PAINEL VTURB
+        // 1. Configure aqui os IDs e Nomes (Mantive os seus do código anterior)
         const vturbMap = {
-            '698e111d7a04c8d380d44955': 'vsl_urofwv3', // Nome que aparecerá na URL
+            '698e111d7a04c8d380d44955': 'vsl_urofwv3', 
             '698e82a44be992fe765d8707': 'vsl_prostatev2',
             '698f6662ceb26906d005e594': 'vsl_vickshealth5',
             '698f686392e29505e05d1cd5': 'vsl_vickshealth6',
-            // Adicione mais linhas se tiver VSL C, D...
+            // Adicione mais se necessário
         };
     
         document.addEventListener('player:ready', function(event) {
@@ -1295,8 +1263,11 @@
     
                         var btnUrl = new URL(btn.href);
                         
-                        // define o utm_content SEM remover o 'tid' que seu outro script colocou
-                        btnUrl.searchParams.set('utm_content', vslName); 
+                        // --- A MÁGICA ACONTECE AQUI ---
+                        // Força o 'src' (CartPanda adora esse parâmetro)
+                        btnUrl.searchParams.set('src', vslName);
+                        // Força também o 'utm_content' para garantir
+                        btnUrl.searchParams.set('utm_content', vslName);
                         
                         btn.href = btnUrl.toString();
                     } catch (e) {
