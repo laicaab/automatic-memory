@@ -463,34 +463,53 @@
     </script>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        (function() {
-            // Função para obter o parâmetro 'tid' da URL da página
-            function getSubidParameter() {
-                var url = new URL(window.location.href);
-                return url.searchParams.get("tid");
-            }
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Captura TODOS os parâmetros da URL atual onde o lead pousou
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (Array.from(urlParams).length > 0) {
+        
+        // Seleciona todos os botões de compra do ClickBank
+        const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
+
+        buyLinks.forEach(function(link) {
             
-            var subid = getSubidParameter();
-            
-            // Se houver 'tid' na URL, injeta em todos os links <a> da página
-            if (subid) {
-                var links = document.querySelectorAll('a');
+            // 2. Injeta os parâmetros preventivamente no carregamento
+            try {
+                const linkUrl = new URL(link.href);
+                urlParams.forEach((value, key) => linkUrl.searchParams.set(key, value));
                 
-                Array.prototype.forEach.call(links, function(link) {
-                    try {
-                        var linkUrl = new URL(link.href);
-                        // Define ou atualiza o parâmetro 'tid' no link de destino
-                        linkUrl.searchParams.set("tid", subid); 
-                        link.href = linkUrl.href; 
-                    } catch (e) {
-                        // Ignora links inválidos (mailto, tel, etc)
-                    }
-                });
+                // Redundância vital para ClickBank: se existir 'tid', passamos como 'vtid' também
+                if(urlParams.has('tid')) {
+                    linkUrl.searchParams.set('vtid', urlParams.get('tid'));
+                }
+                
+                link.href = linkUrl.toString();
+            } catch(e) {
+                console.warn("Erro ao processar link inicial:", e);
             }
-        })();
-    });
-    </script>
+
+            // 3. Failsafe Anti-Utmify: Força a injeção no momento exato do clique
+            link.addEventListener('click', function(e) {
+                try {
+                    const finalUrl = new URL(this.href);
+                    
+                    // Re-aplica todos os parâmetros da URL original
+                    urlParams.forEach((value, key) => finalUrl.searchParams.set(key, value));
+                    
+                    if(urlParams.has('tid')) {
+                        finalUrl.searchParams.set('vtid', urlParams.get('tid'));
+                    }
+                    
+                    this.href = finalUrl.toString();
+                } catch(err) {
+                    console.error("Erro ao forçar parâmetros no clique:", err);
+                }
+            });
+        });
+    }
+});
+</script>
     
     <script>
         // Mapeamento dos IDs do Vturb para os nomes amigáveis no tracking
