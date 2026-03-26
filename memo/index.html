@@ -22,6 +22,9 @@
       defer
     ></script>
 
+    <script> window.clickbank = {vendor: "prostatema"};</script>
+    <script src="https://scripts.clickbank.net/hop.min.js" defer></script>
+
     <style>
         /* RESET E VARIÁVEIS GLOBAIS */
         :root {
@@ -77,7 +80,7 @@
             border-radius: 4px;
         }
 
-        /* HEADER 60 MINUTES (Restaurado para Imagem) */
+        /* HEADER 60 MINUTES */
         .header-content { text-align: left; padding: 25px 20px 15px 20px; max-width: 600px; margin: 0 auto; position: relative; z-index: 1; }
         .sixty-logo { max-width: 250px; margin-bottom: 10px; }
         .sixty-subtitle { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 300; line-height: 1.2; margin-bottom: 15px; letter-spacing: 0.5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
@@ -85,7 +88,7 @@
         /* VSL VIDEO */
         .video-wrapper { position: relative; z-index: 1; width: 100%; max-width: 600px; margin: 0 auto 10px auto; border-bottom: 5px solid #000; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
-        /* COMENTÁRIOS FACEBOOK (Visíveis desde o início) */
+        /* COMENTÁRIOS FACEBOOK */
         .comments-section { position: relative; z-index: 1; width: 100%; max-width: 600px; margin: 0 auto 40px auto; background-color: #fff; color: var(--text-dark); border-radius: 12px; padding: 20px 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .comments-header { font-size: 16px; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
         .comment-box { display: flex; margin-bottom: 20px; }
@@ -99,7 +102,7 @@
         .reactions span { font-size: 12px; color: #65676b; }
         .comments-closed { text-align: center; color: #65676b; font-weight: 600; margin-top: 30px; font-size: 13px; }
 
-        /* DELAY CONTENT (Ofertas e Garantia) */
+        /* DELAY CONTENT */
         .delay-content { position: relative; z-index: 1; width: 100%; max-width: 600px; margin: 0 auto; padding: 0 15px; }
 
         /* COUNTDOWN */
@@ -281,7 +284,6 @@
         <div class="comments-closed">This post is no longer receiving comments!</div>
     </div>
 
-
     <div class="delay-content esconder" id="delay-container">
 
         <div class="countdown-section">
@@ -363,7 +365,7 @@
                 <li><span>✓</span> 60 DAYS GUARANTEE</li>
             </ul>
             
-            <a href="https://prostatemaxforhealth.online/prt-aff-dtc-click/?affiliate=salecapu" class="btn-buy">BUY NOW</a>
+            <a href="https://prostatema.pay.clickbank.net/?affiliate=salecapu&cbitems=PP-PRT2UNITS-AFF&template=prt2units&cbfid=62463" class="btn-buy">BUY NOW</a>
             
             <img src="prostate/cards-1-2-2-1-1-1.webp" alt="Cards" class="cards-img">
             <p class="offer-total">TOTAL: <strike>$217</strike> $158<br>+ $9.99 SHIPPING</p>
@@ -385,7 +387,9 @@
             </div>
         </div>
 
-    </div> <div class="footer">
+    </div> 
+    
+    <div class="footer">
         All Rights Reserved © 2026 by 60 Minutes.
     </div>
 
@@ -393,7 +397,6 @@
         document.addEventListener("DOMContentLoaded", function () {
             
             // 1. CONFIGURAÇÃO DO PITCH (DELAY) Ligado na API do VTurb
-            // AJUSTE AQUI: Segundos exatos para a oferta aparecer (Ex: 2160 = 36 min).
             const SECONDS_TO_DISPLAY = 7; 
             const delayContainer = document.getElementById('delay-container');
             const commentsSection = document.getElementById('comments-section');
@@ -430,7 +433,7 @@
 
             watchVturbProgress();
 
-            // 2. CRONÔMETRO DE ESCASSEZ (Ativado pós delay)
+            // 2. CRONÔMETRO DE ESCASSEZ
             function startCountdown() {
                 let timeInSeconds = 14 * 60 + 34; // 14:34
                 const timerElement = document.getElementById("countdown-timer-1");
@@ -463,57 +466,56 @@
     </script>
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Captura TODOS os parâmetros da URL atual onde o lead pousou
-    const urlParams = new URLSearchParams(window.location.search);
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Captura TODOS os parâmetros da URL atual onde o lead pousou
+            const urlParams = new URLSearchParams(window.location.search);
 
-    if (Array.from(urlParams).length > 0) {
-        
-        // Seleciona todos os botões de compra do ClickBank
-        const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
-
-        buyLinks.forEach(function(link) {
-            
-            // 2. Injeta os parâmetros preventivamente no carregamento
-            try {
-                const linkUrl = new URL(link.href);
-                urlParams.forEach((value, key) => linkUrl.searchParams.set(key, value));
+            if (Array.from(urlParams).length > 0) {
                 
-                // Redundância vital para ClickBank: se existir 'tid', passamos como 'vtid' também
-                if(urlParams.has('tid')) {
-                    linkUrl.searchParams.set('vtid', urlParams.get('tid'));
-                }
-                
-                link.href = linkUrl.toString();
-            } catch(e) {
-                console.warn("Erro ao processar link inicial:", e);
-            }
+                // Seleciona todos os botões de compra do ClickBank
+                const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
 
-            // 3. Failsafe Anti-Utmify: Força a injeção no momento exato do clique
-            link.addEventListener('click', function(e) {
-                try {
-                    const finalUrl = new URL(this.href);
+                buyLinks.forEach(function(link) {
                     
-                    // Re-aplica todos os parâmetros da URL original
-                    urlParams.forEach((value, key) => finalUrl.searchParams.set(key, value));
-                    
-                    if(urlParams.has('tid')) {
-                        finalUrl.searchParams.set('vtid', urlParams.get('tid'));
+                    // 2. Injeta os parâmetros preventivamente no carregamento
+                    try {
+                        const linkUrl = new URL(link.href);
+                        urlParams.forEach((value, key) => linkUrl.searchParams.set(key, value));
+                        
+                        // Redundância vital para ClickBank: se existir 'tid', passamos como 'vtid' também
+                        if(urlParams.has('tid')) {
+                            linkUrl.searchParams.set('vtid', urlParams.get('tid'));
+                        }
+                        
+                        link.href = linkUrl.toString();
+                    } catch(e) {
+                        console.warn("Erro ao processar link inicial:", e);
                     }
-                    
-                    this.href = finalUrl.toString();
-                } catch(err) {
-                    console.error("Erro ao forçar parâmetros no clique:", err);
-                }
-            });
+
+                    // 3. Failsafe Anti-Utmify: Força a injeção no momento exato do clique
+                    link.addEventListener('click', function(e) {
+                        try {
+                            const finalUrl = new URL(this.href);
+                            
+                            // Re-aplica todos os parâmetros da URL original
+                            urlParams.forEach((value, key) => finalUrl.searchParams.set(key, value));
+                            
+                            if(urlParams.has('tid')) {
+                                finalUrl.searchParams.set('vtid', urlParams.get('tid'));
+                            }
+                            
+                            this.href = finalUrl.toString();
+                        } catch(err) {
+                            console.error("Erro ao forçar parâmetros no clique:", err);
+                        }
+                    });
+                });
+            }
         });
-    }
-});
-</script>
+    </script>
     
     <script>
         // Mapeamento dos IDs do Vturb para os nomes amigáveis no tracking
-        // MANTENHA ATUALIZADO COM SEU PAINEL VTURB
         const vturbMap = {
             '69a319566d8aeabb2b202107': 'vsl_ml2prostatemax', // ID atual único
             '69a3170010258bc4a1ffe439': 'vsl_ml1ProstateMax', // Exemplo A/B
@@ -525,7 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('player:ready', function(event) {
             var detail = event.detail || {};
             var config = detail.config || {};
-            var activeId = config.id; // ID do vídeo que o VTurb escolheu rodar (no A/B)
+            var activeId = config.id; 
             var vslName = vturbMap[activeId];
     
             if (activeId && vslName) {
@@ -534,7 +536,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // A. Atualiza a URL do navegador para o lead (utm_content)
                 var currentUrl = new URL(window.location);
                 currentUrl.searchParams.set('utm_content', vslName);
-                // Atualiza a URL sem recarregar a página (history API)
                 window.history.replaceState({}, '', currentUrl);
     
                 // B. Atualiza os Links de Compra (<a>) injetando o utm_content
@@ -546,7 +547,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:')) return;
     
                         var btnUrl = new URL(btn.href);
-                        // Define o utm_content no link do Cartpanda (sem remover o 'tid' injetado pelo Script B)
                         btnUrl.searchParams.set('utm_content', vslName); 
                         btn.href = btnUrl.toString();
                     } catch (e) {
