@@ -472,6 +472,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // 1. Salva o SEU TID original vindo do Facebook/Cloaker logo que a página carrega
+            const urlParams = new URLSearchParams(window.location.search);
+            const meuTidOriginal = urlParams.get('tid');
+
             const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
 
             buyLinks.forEach(function(link) {
@@ -481,19 +485,21 @@
                     try {
                         const finalUrl = new URL(this.href);
                         
-                        // Remove apenas o fbclid bruto por precaução de tamanho (a Utmify já salvou ele no extclid)
                         finalUrl.searchParams.delete('fbclid');
 
-                        // Varre todos os parâmetros e limpa os caracteres proibidos pela ClickBank
+                        // Varre os parâmetros e limpa apenas os bloqueadores de 403 (Pipe e Duplo Traço)
                         const params = Array.from(finalUrl.searchParams.entries());
                         for (let [key, value] of params) {
                             let cleanedValue = value;
-                            
-                            // Substitui o Pipe (|) e o Duplo Traço (--) por um traço simples (-)
                             cleanedValue = cleanedValue.replace(/\|/g, '-');
                             cleanedValue = cleanedValue.replace(/-{2,}/g, '-');
-                            
                             finalUrl.searchParams.set(key, cleanedValue);
+                        }
+
+                        // 2. A CHAVE MESTRA: Força o TID a ser o seu código da planilha, 
+                        // sobrescrevendo qualquer alteração que a Utmify tenha feito nele.
+                        if (meuTidOriginal) {
+                            finalUrl.searchParams.set('tid', meuTidOriginal);
                         }
 
                         window.location.href = finalUrl.toString();
