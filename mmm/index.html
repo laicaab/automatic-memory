@@ -472,25 +472,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // 1. Pega o SEU TID do cloaker que está na barra de endereços (isso está certo)
             const urlParams = new URLSearchParams(window.location.search);
-            
-            // 1. Pega o seu TID completo (ex: Shark1_EAB1_adset1_ad108h1p)
-            let rawCloakerTid = urlParams.get('tid') || "";
-            
-            // 2. Pega o ID da Utmify e limpa o sufixo de texto
-            let rawUtmifyId = urlParams.get('extclid') || "";
-            if (rawUtmifyId.includes('-')) {
-                rawUtmifyId = rawUtmifyId.split('-')[0]; // Pega só os números para poupar espaço
-            }
-
-            // 3. Concatena os dois SEM limite de caracteres
-            // Formato final esperado: Shark1_EAB1_adset1_ad108h1p_637527673949786
-            let combinedTid = rawCloakerTid;
-            if (rawCloakerTid && rawUtmifyId) {
-                combinedTid = rawCloakerTid + "_" + rawUtmifyId;
-            } else if (rawUtmifyId) {
-                combinedTid = rawUtmifyId;
-            }
+            const rawCloakerTid = urlParams.get('tid') || "";
 
             const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
 
@@ -499,10 +483,25 @@
                     e.preventDefault(); 
 
                     try {
+                        // 2. Lê a URL atual DO BOTÃO (onde a Utmify acabou de injetar os dados)
                         const originalUrl = new URL(this.href);
-                        const cleanUrl = new URL(originalUrl.origin + originalUrl.pathname);
                         
-                        // Passa apenas a base estrita do produto para evitar os falsos positivos de 403
+                        // 3. AGORA SIM: Pescamos o extclid direto do botão!
+                        let rawUtmifyId = originalUrl.searchParams.get('extclid') || "";
+                        if (rawUtmifyId.includes('-')) {
+                            rawUtmifyId = rawUtmifyId.split('-')[0]; // Pega só os números
+                        }
+
+                        // 4. Concatena os dois (Seu TID + Utmify)
+                        let combinedTid = rawCloakerTid;
+                        if (rawCloakerTid && rawUtmifyId) {
+                            combinedTid = rawCloakerTid + "_" + rawUtmifyId;
+                        } else if (rawUtmifyId) {
+                            combinedTid = rawUtmifyId;
+                        }
+
+                        // 5. Monta o link limpo da ClickBank (anti-403)
+                        const cleanUrl = new URL(originalUrl.origin + originalUrl.pathname);
                         const allowedParams = ['affiliate', 'cbitems', 'template', 'cbfid', 'vq', 'hopId'];
                         allowedParams.forEach(param => {
                             if (originalUrl.searchParams.has(param)) {
@@ -510,15 +509,14 @@
                             }
                         });
 
-                        // Injeta o TID gigante para forçar o teste do limite da ClickBank
+                        // 6. Injeta o TID monstro para testar o limite da plataforma
                         if (combinedTid) {
                             cleanUrl.searchParams.set('tid', combinedTid);
                         }
 
-                        // Dispara para o checkout
+                        // Vai pro checkout!
                         window.location.href = cleanUrl.toString();
                     } catch(err) {
-                        console.error("Erro no redirecionamento:", err);
                         window.location.href = this.href; 
                     }
                 });
