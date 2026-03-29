@@ -479,36 +479,44 @@
 
             buyLinks.forEach(function(link) {
                 link.addEventListener('click', function(e) {
-                    // 1. Bloqueia o redirecionamento imediato da Utmify
+                    // Interrompe o clique para podermos limpar o link antes de enviar
                     e.preventDefault(); 
 
                     try {
-                        // Pega o link atual (que a Utmify já processou e injetou os aff_subs e extclid)
+                        // Pega o link atual (com tudo que a Utmify já injetou)
                         const finalUrl = new URL(this.href);
-                        
-                        // 2. Garante que o SEU TID está lá para o cloaker e Make
-                        if (myTid) finalUrl.searchParams.set('tid', myTid);
 
-                        // 3. REMOVE OS CULPADOS DO ERRO 403 DA CLICKBANK
-                        finalUrl.searchParams.delete('fbclid'); // O texto gigante que trava o firewall
-                        finalUrl.searchParams.delete('utm_id');
+                        // Cria um array com todos os parâmetros presentes no link do botão
+                        const paramsToClean = Array.from(finalUrl.searchParams.entries());
                         
-                        // Removemos as UTMs originais porque elas contêm a barra "|" (%7C) que o WAF bloqueia.
-                        // A Utmify JÁ SALVOU esses dados nos "aff_sub" e no "extclid", o seu tracking está a salvo!
-                        finalUrl.searchParams.delete('utm_campaign');
-                        finalUrl.searchParams.delete('utm_medium');
-                        finalUrl.searchParams.delete('utm_content');
-                        finalUrl.searchParams.delete('utm_term');
-                        finalUrl.searchParams.delete('utm_source');
-                        finalUrl.searchParams.delete('placement');
-                        finalUrl.searchParams.delete('domain');
-                        finalUrl.searchParams.delete('cname');
-                        finalUrl.searchParams.delete('cwr');
+                        // Percorre os parâmetros e higieniza os valores
+                        for (let [key, value] of paramsToClean) {
+                            let cleanedValue = value;
+                            
+                            // 1. Resolve o erro do SQL Injection (substitui traço duplo por simples)
+                            while(cleanedValue.includes('--')) {
+                                cleanedValue = cleanedValue.replace('--', '-');
+                            }
+                            
+                            // 2. Resolve erro de caractere inválido (substitui Pipe '|' por traço '-')
+                            cleanedValue = cleanedValue.replace(/\|/g, '-');
+
+                            // Atualiza o parâmetro na URL com o valor higienizado
+                            finalUrl.searchParams.set(key, cleanedValue);
+                        }
+
+                        // Garante que o TID principal da página (do Make/Cloaker) esteja presente
+                        if (myTid) {
+                            finalUrl.searchParams.set('tid', myTid);
+                        }
                         
-                        // 4. Redireciona o usuário com o link limpo (Tracking intacto, sem 403)
+                        // Remove especificamente a string raiz do fbclid por segurança de tamanho
+                        finalUrl.searchParams.delete('fbclid');
+
+                        // Redireciona para o checkout com a URL higienizada
                         window.location.href = finalUrl.toString();
                     } catch(err) {
-                        console.error("Erro na limpeza do link:", err);
+                        console.error("Erro ao sanitizar o link:", err);
                         window.location.href = this.href; // Redirecionamento de emergência
                     }
                 });
