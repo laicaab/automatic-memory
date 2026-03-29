@@ -472,50 +472,44 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Captura TODOS os parâmetros da URL atual onde o lead pousou
             const urlParams = new URLSearchParams(window.location.search);
+            
+            // LISTA BRANCA: Apenas estes parâmetros serão repassados ao ClickBank
+            const parametrosVitais = [
+                'tid', 'cwr', 'cname', 'domain', 'placement', 
+                'adset', 'adname', 'site', 'utm_source', 
+                'utm_campaign', 'utm_medium', 'utm_content', 'utm_term'
+            ];
 
-            if (Array.from(urlParams).length > 0) {
+            const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
+
+            buyLinks.forEach(function(link) {
                 
-                // Seleciona todos os botões de compra do ClickBank
-                const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
-
-                buyLinks.forEach(function(link) {
-                    
-                    // 2. Injeta os parâmetros preventivamente no carregamento
+                // Função que injeta apenas o que importa, sem apagar o que a Utmify fez
+                function injetarParametrosSeguros(targetUrlString) {
                     try {
-                        const linkUrl = new URL(link.href);
-                        urlParams.forEach((value, key) => linkUrl.searchParams.set(key, value));
+                        const linkUrl = new URL(targetUrlString);
                         
-                        // Redundância vital para ClickBank: se existir 'tid', passamos como 'vtid' também
-                        if(urlParams.has('tid')) {
-                            linkUrl.searchParams.set('vtid', urlParams.get('tid'));
-                        }
-                        
-                        link.href = linkUrl.toString();
-                    } catch(e) {
-                        console.warn("Erro ao processar link inicial:", e);
-                    }
-
-                    // 3. Failsafe Anti-Utmify: Força a injeção no momento exato do clique
-                    link.addEventListener('click', function(e) {
-                        try {
-                            const finalUrl = new URL(this.href);
-                            
-                            // Re-aplica todos os parâmetros da URL original
-                            urlParams.forEach((value, key) => finalUrl.searchParams.set(key, value));
-                            
-                            if(urlParams.has('tid')) {
-                                finalUrl.searchParams.set('vtid', urlParams.get('tid'));
+                        parametrosVitais.forEach(param => {
+                            if (urlParams.has(param)) {
+                                linkUrl.searchParams.set(param, urlParams.get(param));
                             }
-                            
-                            this.href = finalUrl.toString();
-                        } catch(err) {
-                            console.error("Erro ao forçar parâmetros no clique:", err);
-                        }
-                    });
+                        });
+                        
+                        return linkUrl.toString();
+                    } catch(e) {
+                        return targetUrlString; // Se der erro, retorna o link original
+                    }
+                }
+
+                // 1. Injeta preventivamente ao carregar a página
+                link.href = injetarParametrosSeguros(link.href);
+
+                // 2. Failsafe Anti-Utmify: Reforça no momento do clique
+                link.addEventListener('click', function(e) {
+                    this.href = injetarParametrosSeguros(this.href);
                 });
-            }
+            });
         });
     </script>
     
