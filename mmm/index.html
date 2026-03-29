@@ -472,50 +472,31 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Pega o SEU TID do cloaker que está na barra de endereços (isso está certo)
-            const urlParams = new URLSearchParams(window.location.search);
-            const rawCloakerTid = urlParams.get('tid') || "";
-
             const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
 
             buyLinks.forEach(function(link) {
                 link.addEventListener('click', function(e) {
                     e.preventDefault(); 
-
+                    
                     try {
-                        // 2. Lê a URL atual DO BOTÃO (onde a Utmify acabou de injetar os dados)
-                        const originalUrl = new URL(this.href);
+                        const finalUrl = new URL(this.href);
                         
-                        // 3. AGORA SIM: Pescamos o extclid direto do botão!
-                        let rawUtmifyId = originalUrl.searchParams.get('extclid') || "";
-                        if (rawUtmifyId.includes('-')) {
-                            rawUtmifyId = rawUtmifyId.split('-')[0]; // Pega só os números
+                        // Remove apenas o fbclid bruto por precaução de tamanho (a Utmify já salvou ele no extclid)
+                        finalUrl.searchParams.delete('fbclid');
+
+                        // Varre todos os parâmetros e limpa os caracteres proibidos pela ClickBank
+                        const params = Array.from(finalUrl.searchParams.entries());
+                        for (let [key, value] of params) {
+                            let cleanedValue = value;
+                            
+                            // Substitui o Pipe (|) e o Duplo Traço (--) por um traço simples (-)
+                            cleanedValue = cleanedValue.replace(/\|/g, '-');
+                            cleanedValue = cleanedValue.replace(/-{2,}/g, '-');
+                            
+                            finalUrl.searchParams.set(key, cleanedValue);
                         }
 
-                        // 4. Concatena os dois (Seu TID + Utmify)
-                        let combinedTid = rawCloakerTid;
-                        if (rawCloakerTid && rawUtmifyId) {
-                            combinedTid = rawCloakerTid + "_" + rawUtmifyId;
-                        } else if (rawUtmifyId) {
-                            combinedTid = rawUtmifyId;
-                        }
-
-                        // 5. Monta o link limpo da ClickBank (anti-403)
-                        const cleanUrl = new URL(originalUrl.origin + originalUrl.pathname);
-                        const allowedParams = ['affiliate', 'cbitems', 'template', 'cbfid', 'vq', 'hopId'];
-                        allowedParams.forEach(param => {
-                            if (originalUrl.searchParams.has(param)) {
-                                cleanUrl.searchParams.set(param, originalUrl.searchParams.get(param));
-                            }
-                        });
-
-                        // 6. Injeta o TID monstro para testar o limite da plataforma
-                        if (combinedTid) {
-                            cleanUrl.searchParams.set('tid', combinedTid);
-                        }
-
-                        // Vai pro checkout!
-                        window.location.href = cleanUrl.toString();
+                        window.location.href = finalUrl.toString();
                     } catch(err) {
                         window.location.href = this.href; 
                     }
