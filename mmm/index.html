@@ -472,7 +472,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Salva o SEU TID original vindo do Facebook/Cloaker logo que a página carrega
+            // Salva o seu TID original soberano
             const urlParams = new URLSearchParams(window.location.search);
             const meuTidOriginal = urlParams.get('tid');
 
@@ -483,26 +483,32 @@
                     e.preventDefault(); 
                     
                     try {
-                        const finalUrl = new URL(this.href);
-                        
-                        finalUrl.searchParams.delete('fbclid');
+                        const originalUrl = new URL(this.href);
+                        const cleanUrl = new URL(originalUrl.origin + originalUrl.pathname);
 
-                        // Varre os parâmetros e limpa apenas os bloqueadores de 403 (Pipe e Duplo Traço)
-                        const params = Array.from(finalUrl.searchParams.entries());
-                        for (let [key, value] of params) {
-                            let cleanedValue = value;
-                            cleanedValue = cleanedValue.replace(/\|/g, '-');
-                            cleanedValue = cleanedValue.replace(/-{2,}/g, '-');
-                            finalUrl.searchParams.set(key, cleanedValue);
-                        }
+                        // 1. Passa APENAS a base do produto para o checkout funcionar
+                        const cbParams = ['affiliate', 'cbitems', 'template', 'cbfid', 'vq', 'hopId'];
+                        cbParams.forEach(p => {
+                            if (originalUrl.searchParams.has(p)) cleanUrl.searchParams.set(p, originalUrl.searchParams.get(p));
+                        });
 
-                        // 2. A CHAVE MESTRA: Força o TID a ser o seu código da planilha, 
-                        // sobrescrevendo qualquer alteração que a Utmify tenha feito nele.
+                        // 2. Passa APENAS os parâmetros de afiliados OFICIAIS (Adeus UTMs e lixo do Facebook)
+                        const trackingParams = ['extclid', 'aff_sub1', 'aff_sub2', 'aff_sub3', 'aff_sub4', 'aff_sub5', 'unique_aff_sub1', 'unique_aff_sub2', 'unique_aff_sub3', 'unique_aff_sub4', 'unique_aff_sub5'];
+                        trackingParams.forEach(p => {
+                            if (originalUrl.searchParams.has(p)) {
+                                // Limpa qualquer traço duplo ou pipe restante por precaução
+                                let cleanVal = originalUrl.searchParams.get(p).replace(/[|]/g, '-').replace(/-{2,}/g, '-');
+                                cleanUrl.searchParams.set(p, cleanVal);
+                            }
+                        });
+
+                        // 3. Força o seu TID na URL (O mais importante para o Make)
                         if (meuTidOriginal) {
-                            finalUrl.searchParams.set('tid', meuTidOriginal);
+                            cleanUrl.searchParams.set('tid', meuTidOriginal);
                         }
 
-                        window.location.href = finalUrl.toString();
+                        // Redireciona para o checkout com a URL perfeitamente higienizada
+                        window.location.href = cleanUrl.toString();
                     } catch(err) {
                         window.location.href = this.href; 
                     }
