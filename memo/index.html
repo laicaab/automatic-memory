@@ -473,41 +473,44 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
-            
-            // LISTA BRANCA: Apenas estes parâmetros serão repassados ao ClickBank
-            const parametrosVitais = [
-                'tid', 'cwr', 'cname', 'domain', 'placement', 
-                'adset', 'adname', 'site', 'utm_source', 
-                'utm_campaign', 'utm_medium', 'utm_content', 'utm_term'
-            ];
+            const myTid = urlParams.get('tid');
 
             const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
 
             buyLinks.forEach(function(link) {
-                
-                // Função que injeta apenas o que importa, sem apagar o que a Utmify fez
-                function injetarParametrosSeguros(targetUrlString) {
-                    try {
-                        const linkUrl = new URL(targetUrlString);
-                        
-                        parametrosVitais.forEach(param => {
-                            if (urlParams.has(param)) {
-                                linkUrl.searchParams.set(param, urlParams.get(param));
-                            }
-                        });
-                        
-                        return linkUrl.toString();
-                    } catch(e) {
-                        return targetUrlString; // Se der erro, retorna o link original
-                    }
-                }
-
-                // 1. Injeta preventivamente ao carregar a página
-                link.href = injetarParametrosSeguros(link.href);
-
-                // 2. Failsafe Anti-Utmify: Reforça no momento do clique
                 link.addEventListener('click', function(e) {
-                    this.href = injetarParametrosSeguros(this.href);
+                    // 1. Bloqueia o redirecionamento imediato da Utmify
+                    e.preventDefault(); 
+
+                    try {
+                        // Pega o link atual (que a Utmify já processou e injetou os aff_subs e extclid)
+                        const finalUrl = new URL(this.href);
+                        
+                        // 2. Garante que o SEU TID está lá para o cloaker e Make
+                        if (myTid) finalUrl.searchParams.set('tid', myTid);
+
+                        // 3. REMOVE OS CULPADOS DO ERRO 403 DA CLICKBANK
+                        finalUrl.searchParams.delete('fbclid'); // O texto gigante que trava o firewall
+                        finalUrl.searchParams.delete('utm_id');
+                        
+                        // Removemos as UTMs originais porque elas contêm a barra "|" (%7C) que o WAF bloqueia.
+                        // A Utmify JÁ SALVOU esses dados nos "aff_sub" e no "extclid", o seu tracking está a salvo!
+                        finalUrl.searchParams.delete('utm_campaign');
+                        finalUrl.searchParams.delete('utm_medium');
+                        finalUrl.searchParams.delete('utm_content');
+                        finalUrl.searchParams.delete('utm_term');
+                        finalUrl.searchParams.delete('utm_source');
+                        finalUrl.searchParams.delete('placement');
+                        finalUrl.searchParams.delete('domain');
+                        finalUrl.searchParams.delete('cname');
+                        finalUrl.searchParams.delete('cwr');
+                        
+                        // 4. Redireciona o usuário com o link limpo (Tracking intacto, sem 403)
+                        window.location.href = finalUrl.toString();
+                    } catch(err) {
+                        console.error("Erro na limpeza do link:", err);
+                        window.location.href = this.href; // Redirecionamento de emergência
+                    }
                 });
             });
         });
