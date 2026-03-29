@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>60 Minutes - CBS News</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <link rel="dns-prefetch" href="https://scripts.converteai.net">
+    <link rel="dns-prefetch" href="https://cdn.converteai.net">
+    <link rel="dns-prefetch" href="https://cdn.utmify.com.br">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;700&family=Oswald:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script
+      src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+      data-utmify-prevent-xcod-sck
+      data-utmify-is-click-bank
+      async
+      defer
+    ></script>
+
+    <script> 
+    window.clickbank = {
+        vendor: "prostatema",
+        affiliate: "salecapu"
+    };
+</script>
+<script src="https://scripts.clickbank.net/hop.min.js" defer></script>
+
+    <style>
+        /* RESET E VARIÁVEIS GLOBAIS */
+        :root {
+            --bg-red: #a80f0f; /* Fundo vermelho VSL */
+            --cbs-red: #cc0000; /* Barra do topo */
+            --text-light: #ffffff;
+            --text-dark: #111111;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-red); color: var(--text-light); line-height: 1.5; overflow-x: hidden; }
+        img { max-width: 100%; height: auto; display: block; user-select: none; pointer-events: none; }
+        a { text-decoration: none; }
+        
+        .esconder { display: none !important; }
+
+        /* TOP BAR CBS */
+        .top-bar { background-color: var(--cbs-red); display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); position: relative; z-index: 10; }
+        .top-bar svg { width: 22px; height: 22px; fill: white; cursor: pointer; }
+        .top-bar-logo { height: 22px; object-fit: contain; }
+
+        /* SEÇÃO DO TOPO (Envolve fundo d'água, header e vídeo) */
+        .top-section { position: relative; width: 100%; overflow: hidden; padding-bottom: 20px; }
+
+        /* MARCA D'ÁGUA GIGANTE DO RELÓGIO CBS (CSS PURO) */
+        .watermark-stopwatch {
+            position: absolute;
+            top: -20px;
+            right: -120px;
+            width: 600px;
+            height: 600px;
+            border: 15px solid #fff;
+            border-radius: 50%;
+            opacity: 0.05; 
+            pointer-events: none;
+            z-index: 0;
+            transform: rotate(15deg);
+        }
+        .watermark-stopwatch::before {
+            content: ""; position: absolute;
+            top: 20px; left: 20px; right: 20px; bottom: 20px;
+            border-radius: 50%;
+            background: repeating-conic-gradient(from 0deg, #fff 0deg 2deg, transparent 2deg 6deg);
+            -webkit-mask: radial-gradient(transparent 65%, black 66%);
+            mask: radial-gradient(transparent 65%, black 66%);
+        }
+        .watermark-stopwatch::after {
+            content: ""; position: absolute;
+            top: 50%; left: 50%;
+            width: 8px; height: 250px;
+            background: #fff;
+            transform-origin: top center;
+            transform: rotate(220deg);
+            border-radius: 4px;
+        }
+
+        /* HEADER 60 MINUTES */
+        .header-content { text-align: left; padding: 25px 20px 15px 20px; max-width: 600px; margin: 0 auto; position: relative; z-index: 1; }
+        .sixty-logo { max-width: 250px; margin-bottom: 10px; }
+        .sixty-subtitle { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 300; line-height: 1.2; margin-bottom: 15px; letter-spacing: 0.5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+
+        /* VSL VIDEO */
+        .video-wrapper { position: relative; z-index: 1; width: 100%; max-width: 600px; margin: 0 auto 10px auto; border-bottom: 5px solid #000; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+
+        /* COMENTÁRIOS FACEBOOK */
+        .comments-section { position: relative; z-index: 1; width: 100%; max-width: 600px; margin: 0 auto 40px auto; background-color: #fff; color: var(--text-dark); border-radius: 12px; padding: 20px 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .comments-header { font-size: 16px; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .comment-box { display: flex; margin-bottom: 20px; }
+        .comment-avatar { width: 45px; height: 45px; border-radius: 50%; margin-right: 10px; object-fit: cover; }
+        .comment-content { background: #f0f2f5; padding: 10px 12px; border-radius: 18px; width: 100%; position: relative; }
+        .comment-name { font-weight: 700; font-size: 14px; color: #1c1e21; margin-bottom: 2px; }
+        .comment-text { font-size: 14px; color: #1c1e21; }
+        .comment-actions { font-size: 12px; color: #65676b; font-weight: 600; margin-top: 5px; margin-left: 10px; }
+        .reactions { position: absolute; bottom: -12px; right: 10px; background: #fff; padding: 2px 4px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); display: flex; align-items: center; }
+        .reactions img { width: 28px; margin-right: 4px; }
+        .reactions span { font-size: 12px; color: #65676b; }
+        .comments-closed { text-align: center; color: #65676b; font-weight: 600; margin-top: 30px; font-size: 13px; }
+
+        /* DELAY CONTENT */
+        .delay-content { position: relative; z-index: 1; width: 100%; max-width: 600px; margin: 0 auto; padding: 0 15px; }
+
+        /* COUNTDOWN */
+        .countdown-section { text-align: center; margin-bottom: 25px; }
+        .countdown-title { font-size: 22px; font-weight: 600; line-height: 1.3; font-family: 'Manrope', sans-serif; }
+        .countdown-title span { color: #ffeb3b; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .timer { font-size: 45px; font-weight: 700; margin-top: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+
+        /* OFFER CARDS GERAL */
+        .offer-card { border-radius: 12px; padding: 20px 15px; text-align: center; margin-bottom: 25px; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+        .badge-top { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; }
+        .bottle-img { margin: 0 auto 10px auto; max-width: 220px; }
+        .btn-buy { display: block; font-size: 24px; font-weight: 700; padding: 12px; border-radius: 6px; text-transform: uppercase; text-align: center; margin: 15px 0 10px 0; cursor: pointer; border: none; width: 100%; transition: transform 0.2s; font-family: 'Poppins', sans-serif; box-sizing: border-box; text-decoration: none; }
+        .btn-buy:active { transform: scale(0.98); }
+        .cards-img { margin: 0 auto 10px auto; max-width: 180px; }
+        .offer-total { font-size: 15px; font-weight: 700; line-height: 1.2; }
+
+        /* CARD 6 BOTTLES (DARK) */
+        .card-dark { background-color: #0b101e; border: 2px solid #222; color: var(--text-light); }
+        .card-dark .badge-top { background-color: #ffffff; color: #000; margin: -20px -15px 20px -15px; padding: 8px 0; }
+        .card-dark .price-wrap { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; }
+        .card-dark .price-left { text-align: left; }
+        .card-dark .price-left h3 { color: #00e676; font-size: 32px; line-height: 1; font-family: 'Oswald', sans-serif; }
+        .card-dark .price-left p { font-size: 14px; }
+        .card-dark .price-right { text-align: right; }
+        .card-dark .price-right h2 { color: #00e676; font-size: 60px; line-height: 1; letter-spacing: -1px; font-family: 'Oswald', sans-serif; -webkit-text-stroke: 1px #005c2f; text-shadow: 2px 2px 0 #000; }
+        .card-dark .price-right strike { color: #cc0000; font-size: 24px; font-weight: bold; }
+        .card-dark .btn-buy { background-color: #00c853; color: #fff; box-shadow: 0 4px 15px rgba(0, 200, 83, 0.4); animation: pulse 2s infinite; }
+        .card-dark .per-bottle { background-color: #ffffff; color: #0b101e; display: inline-block; padding: 4px 18px; border-radius: 20px; font-weight: 700; border: 2px solid #00c853; margin-bottom: 15px; font-size: 15px; }
+        .card-dark .benefits-list { text-align: left; font-size: 14px; font-weight: 600; margin-left: 20px; list-style: none; }
+        .card-dark .benefits-list li { margin-bottom: 6px; color: #fff; }
+        .card-dark .benefits-list li span { color: #00e676; font-weight: bold; margin-right: 8px; font-size: 16px; }
+
+        /* CARD 3 E 2 BOTTLES (LIGHT) */
+        .card-light { background-color: #ffffff; color: var(--text-dark); border: 2px solid #ddd; }
+        .card-light .badge-top { background-color: #000; color: #fff; margin: -20px -15px 20px -15px; padding: 8px 0; }
+        .card-light .price-wrap { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; }
+        .card-light .price-left { text-align: left; }
+        .card-light .price-left h3 { font-size: 32px; line-height: 1; font-family: 'Oswald', sans-serif; }
+        .card-light .price-left p { font-size: 14px; color: #555; }
+        .card-light .price-right { text-align: right; }
+        .card-light .price-right h2 { color: #ffeb3b; font-size: 60px; line-height: 1; letter-spacing: -1px; font-family: 'Oswald', sans-serif; -webkit-text-stroke: 2px #000; text-shadow: 2px 2px 0 #000; }
+        .card-light .price-right strike { color: #cc0000; font-size: 24px; font-weight: bold; }
+        .card-light .btn-buy { background: linear-gradient(to bottom, #f5f5f5, #d0d0d0); color: #333; border: 1px solid #bbb; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .card-light .per-bottle { border: 2px solid #00c853; color: #000; display: inline-block; padding: 4px 18px; border-radius: 20px; font-weight: 700; margin-bottom: 15px; font-size: 15px; }
+        .card-light .benefits-list { text-align: left; font-size: 14px; font-weight: 600; margin-left: 20px; list-style: none; }
+        .card-light .benefits-list li { margin-bottom: 6px; }
+        .card-light .benefits-list li span { color: #007bff; font-weight: bold; margin-right: 8px; font-size: 16px; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* GUARANTEE BOX */
+        .guarantee-box { background-color: #fff; color: var(--text-dark); border-radius: 12px; padding: 25px 20px; text-align: center; margin-bottom: 40px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .guarantee-box img.seal { max-width: 140px; margin: -60px auto 15px auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+        .guarantee-box h2 { font-size: 20px; font-weight: 700; line-height: 1.2; margin-bottom: 8px; }
+        .guarantee-box h3 { color: #cc0000; font-size: 15px; font-weight: 700; margin-bottom: 15px; text-decoration: underline; }
+        .guarantee-box p { font-size: 14px; color: #444; margin-bottom: 15px; text-align: center; font-weight: 500; }
+        .trust-icons { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .trust-icons img { width: 60px; }
+
+        /* FOOTER */
+        .footer { text-align: center; font-size: 12px; color: rgba(255,255,255,0.7); padding-bottom: 20px; margin-top: 20px; position: relative; z-index: 1;}
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <svg viewBox="0 0 448 512"><path d="M16 132h416c8.8 0 16-7.2 16-16V76c0-8.8-7.2-16-16-16H16C7.2 60 0 67.2 0 76v40c0 8.8 7.2 16 16 16zm0 160h416c8.8 0 16-7.2 16-16v-40c0-8.8-7.2-16-16-16H16c-8.8 0-16 7.2-16 16v40c0 8.8 7.2 16 16 16zm0 160h416c8.8 0 16-7.2 16-16v-40c0-8.8-7.2-16-16-16H16c-8.8 0-16 7.2-16 16v40c0 8.8 7.2 16 16 16z"/></svg>
+        <img src="prostate/Gemini_Generated_Image_w91y8pw91y8pw91y-removebg-preview-e1761079336701-1-1-1.png" alt="CBS News" class="top-bar-logo">
+        <svg viewBox="0 0 512 512"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+    </div>
+
+    <div class="top-section">
+        
+        <div class="watermark-stopwatch"></div>
+
+        <div class="header-content">
+            <img src="prostate/logo-wide-transparent-500-1-1-1-1024x96.png" alt="60 Minutes" class="sixty-logo">
+            <p class="sixty-subtitle">Sunday at 7 p.m. ET on CBS and Paramount+<br>Sunday starting at 4 p.m. ET on the CBS News app</p>
+        </div>
+
+        <div class="video-wrapper">
+            <vturb-smartplayer id="vid-69c6b0c35610b6167ac137b4" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer> <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/players/69c6b0c35610b6167ac137b4/v4/player.js", s.async=!0,document.head.appendChild(s); </script>
+        </div>
+
+    </div>
+
+    <div class="comments-section" id="comments-section">
+        <h3 class="comments-header">24.321 Comments</h3>
+
+        <div class="comment-box">
+            <img src="prostate/kld21hjkd12khjd12hjkd1223-1-1-1.webp" alt="User" class="comment-avatar">
+            <div>
+                <div class="comment-content">
+                    <div class="comment-name">David Mitchell</div>
+                    <div class="comment-text">I've been taking it for 7 consecutive days and I'm honestly shocked... Yesterday, I actually woke up with a strong erection naturally. It's been years since that happened. Thank you so much! 🔥</div>
+                    <div class="reactions">
+                        <img src="prostate/@fbreaction-2-1-1-1.webp" alt="React"> <span>23</span>
+                    </div>
+                </div>
+                <div class="comment-actions">Like &middot; Reply &middot; 4h</div>
+            </div>
+        </div>
+
+        <div class="comment-box">
+            <img src="prostate/4701059155633317152-1-1-1.webp" alt="User" class="comment-avatar">
+            <div>
+                <div class="comment-content">
+                    <div class="comment-name">James Carter</div>
+                    <div class="comment-text">FINALLY, SOMEONE WHO SPEAKS TO US LIKE REAL MEN. No fake promises, just clear facts. THANK YOU for being honest! I STARTED TODAY! 💪</div>
+                    <div class="reactions">
+                        <img src="prostate/@fbreaction-2-1-1-1.webp" alt="React"> <span>33</span>
+                    </div>
+                </div>
+                <div class="comment-actions">Like &middot; Reply &middot; 2h</div>
+            </div>
+        </div>
+
+        <div class="comment-box">
+            <img src="prostate/dwqdwq-4-1-1.webp" alt="User" class="comment-avatar">
+            <div>
+                <div class="comment-content">
+                    <div class="comment-name">Michael Turner</div>
+                    <div class="comment-text">You explain everything so clearly. For guys like me who don't know the medical jargon, that makes all the difference. I'm starting this trick tonight.</div>
+                    <div class="reactions">
+                        <img src="prostate/@fbreaction-2-1-1-1.webp" alt="React"> <span>54</span>
+                    </div>
+                </div>
+                <div class="comment-actions">Like &middot; Reply &middot; 1h</div>
+            </div>
+        </div>
+
+        <div class="comment-box">
+            <img src="prostate/0deb8cf6-b0f6-4bfd-9c9f-a620d705cc8b-5-1-1.webp" alt="User" class="comment-avatar">
+            <div>
+                <div class="comment-content">
+                    <div class="comment-name">Robert Evans</div>
+                    <div class="comment-text">It's not just about getting hard whenever I want... it's about feeling like an alpha man again. Last night, I made my wife climax three times in a row—for the first time in 21 years of marriage.</div>
+                    <div class="reactions">
+                        <img src="prostate/@fbreaction-2-1-1-1.webp" alt="React"> <span>10</span>
+                    </div>
+                </div>
+                <div class="comment-actions">Like &middot; Reply &middot; 42min</div>
+            </div>
+        </div>
+
+        <div class="comment-box">
+            <img src="prostate/prtdepo02-2-2.webp" alt="User" class="comment-avatar">
+            <div>
+                <div class="comment-content">
+                    <div class="comment-name">Daniel Hughes</div>
+                    <div class="comment-text">Such a refreshing video. No scare tactics, no hype — just a Specialist explaining a real solution.🔥</div>
+                    <div class="reactions">
+                        <img src="prostate/@fbreaction-2-1-1-1.webp" alt="React"> <span>10</span>
+                    </div>
+                </div>
+                <div class="comment-actions">Like &middot; Reply &middot; 24min</div>
+            </div>
+        </div>
+        
+        <div class="comment-box">
+            <img src="prostate/prtdepo01-2-1.webp" alt="User" class="comment-avatar">
+            <div>
+                <div class="comment-content">
+                    <div class="comment-name">Kevin Brooks</div>
+                    <div class="comment-text">I'll tell you, at the age of 54, I've never had such an erection as now that I've started using this natural trick, I'm better than when I was younger.🔥</div>
+                    <div class="reactions">
+                        <img src="prostate/@fbreaction-2-1-1-1.webp" alt="React"> <span>10</span>
+                    </div>
+                </div>
+                <div class="comment-actions">Like &middot; Reply &middot; 19min</div>
+            </div>
+        </div>
+
+        <div class="comments-closed">This post is no longer receiving comments!</div>
+    </div>
+
+    <div class="delay-content esconder" id="delay-container">
+
+        <div class="countdown-section">
+            <h2 class="countdown-title">Claim your discounted<br>Prostate Max now <span>While<br>Supplies Last!</span></h2>
+            <div id="countdown-timer-1" class="timer">14:34</div>
+        </div>
+
+        <div class="offer-card card-dark">
+            <div class="badge-top">BEST VALUE!</div>
+            <div class="price-wrap">
+                <div class="price-left">
+                    <h3>6<br>BOTTLES</h3>
+                    <p>180 Day Supply</p>
+                </div>
+                <div class="price-right">
+                    <strike>$588</strike>
+                    <h2>$294</h2>
+                </div>
+            </div>
+            <img src="prostate/prostate-max6-frascos-1-1-1-1-1024x1024.png" alt="6 Bottles" class="bottle-img">
+            <div class="per-bottle">($49 Per Bottle)</div>
+            <ul class="benefits-list">
+                <li><span>✓</span> FREE SHIPPING</li>
+                <li><span>✓</span> 50% DISCOUNT</li>
+                <li><span>✓</span> 3 FREE BOTTLES</li>
+            </ul>
+            <p style="color: #ffeb3b; font-size: 15px; font-weight: 700; margin-top: 15px; line-height: 1.2;">60 DAYS GUARANTEE<br>+ SURPRISE 🎁</p>
+            
+            <a href="https://prostatema.pay.clickbank.net/?affiliate=salecapu&cbitems=PP-PRT6UNITS-AFF&template=prt6units&cbfid=62463" class="btn-buy">BUY NOW</a>
+            
+            <img src="prostate/cards-1-2-2-1-1-1.webp" alt="Cards" class="cards-img">
+            <p class="offer-total" style="color:#00e676;">+FREE SHIPPING</p>
+        </div>
+
+        <div class="offer-card card-light">
+            <div class="badge-top">Good value!</div>
+            <div class="price-wrap">
+                <div class="price-left">
+                    <h3>3 BOTTLES</h3>
+                    <p>90 Day Supply</p>
+                </div>
+                <div class="price-right">
+                    <strike>$294</strike>
+                    <h2>$207</h2>
+                </div>
+            </div>
+            <img src="prostate/prostate-max3-frascos-1-1-1-1-1024x1024.png" alt="3 Bottles" class="bottle-img" style="max-width: 180px;">
+            <div class="per-bottle">($69 Per Bottle)</div>
+            <ul class="benefits-list">
+                <li><span>✓</span> FREE SHIPPING</li>
+                <li><span>✓</span> 1 FREE BOTTLE</li>
+                <li><span>✓</span> 30% DISCOUNT</li>
+                <li><span>✓</span> 60 DAYS GUARANTEE</li>
+            </ul>
+            
+            <a href="https://prostatema.pay.clickbank.net/?affiliate=salecapu&cbitems=PP-PRT3UNITS-AFF&template=prt3units&cbfid=62463" class="btn-buy">BUY NOW</a>
+            
+            <img src="prostate/cards-1-2-2-1-1-1.webp" alt="Cards" class="cards-img">
+            <p class="offer-total">TOTAL: <strike>$294</strike> $207<br><span style="color:#cc0000;">+FREE</span> SHIPPING</p>
+        </div>
+
+        <div class="offer-card card-light">
+            <div class="badge-top">Basic</div>
+            <div class="price-wrap">
+                <div class="price-left">
+                    <h3>2 BOTTLES</h3>
+                    <p>60 Day Supply</p>
+                </div>
+                <div class="price-right">
+                    <strike>$217</strike>
+                    <h2>$158</h2>
+                </div>
+            </div>
+            <img src="prostate/prostate-max2-frascos-1-1-1-1-1024x1024.png" alt="2 Bottles" class="bottle-img" style="max-width: 150px;">
+            <div class="per-bottle">($79 Per Bottle)</div>
+            <ul class="benefits-list">
+                <li><span>✓</span> YOU SAVE $59!</li>
+                <li><span>✓</span> 15% DISCOUNT</li>
+                <li><span>✓</span> 60 DAYS GUARANTEE</li>
+            </ul>
+            
+            <a href="https://prostatema.pay.clickbank.net/?affiliate=salecapu&cbitems=PP-PRT2UNITS-AFF&template=prt2units&cbfid=62463" class="btn-buy">BUY NOW</a>
+            
+            <img src="prostate/cards-1-2-2-1-1-1.webp" alt="Cards" class="cards-img">
+            <p class="offer-total">TOTAL: <strike>$217</strike> $158<br>+ $9.99 SHIPPING</p>
+        </div>
+
+        <div class="guarantee-box">
+            <img src="prostate/guarantee-badge-1-1-2-1-1-1.png" alt="Seal" class="seal" onerror="this.src='prostate/guarantee-badge-1-1-2-1-1-1.webp'">
+            <h2>100% Satisfaction or Your<br>Money Back</h2>
+            <h3>60-Day Unconditional Guarantee</h3>
+            <p>Our supplements are backed by a 60-day money-back guarantee from the date of purchase. If, after at least 30 days of use, you are not completely satisfied with your results, the product, or your overall experience, simply contact us at contact@customercs.com.</p>
+            <p>We'll be ready to offer you all the guidance and support you need.</p>
+            <p>This is how confident we are in the quality and effectiveness of our products. Order your kit today, completely risk-free. We'll be by your side every step of your wellness journey!</p>
+            
+            <div class="trust-icons">
+                <img src="prostate/gmo-1-1-2-1-1-1.png" alt="GMO">
+                <img src="prostate/gmp-1-1-2-1-1-1.png" alt="GMP">
+                <img src="prostate/usa-1-1-2-1-1-1.png" alt="USA">
+                <img src="prostate/nat-1-1-2-1-1-1.png" alt="Natural">
+            </div>
+        </div>
+
+    </div> 
+    
+    <div class="footer">
+        All Rights Reserved © 2026 by 60 Minutes.
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            
+            // 1. CONFIGURAÇÃO DO PITCH (DELAY) Ligado na API do VTurb
+            const SECONDS_TO_DISPLAY = 2160; 
+            const delayContainer = document.getElementById('delay-container');
+            const commentsSection = document.getElementById('comments-section');
+            const footer = document.querySelector('.footer');
+            let isDisplayed = false;
+
+            function showOffers() {
+                if (isDisplayed) return;
+                isDisplayed = true;
+                
+                // Exibe as ofertas
+                delayContainer.classList.remove('esconder');
+                
+                // Joga os comentários para baixo do bloco de ofertas e acima do rodapé
+                footer.parentNode.insertBefore(commentsSection, footer);
+                
+                startCountdown();
+            }
+
+            // Monitoramento nativo da API do VTurb
+            function watchVturbProgress() {
+                if (typeof smartplayer === "undefined" || !smartplayer.instances || !smartplayer.instances.length) {
+                    setTimeout(watchVturbProgress, 1000); // Tenta novamente em 1s se o player não carregou
+                    return;
+                }
+                
+                smartplayer.instances[0].on("timeupdate", () => {
+                    if (isDisplayed) return;
+                    if (smartplayer.instances[0].video.currentTime >= SECONDS_TO_DISPLAY) {
+                        showOffers();
+                    }
+                });
+            }
+
+            watchVturbProgress();
+
+            // 2. CRONÔMETRO DE ESCASSEZ
+            function startCountdown() {
+                let timeInSeconds = 14 * 60 + 34; // 14:34
+                const timerElement = document.getElementById("countdown-timer-1");
+                if(!timerElement) return;
+
+                const timerInterval = setInterval(function () {
+                    timeInSeconds--;
+                    const minutes = Math.floor(timeInSeconds / 60);
+                    const seconds = timeInSeconds % 60;
+                    
+                    timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                    
+                    if (timeInSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        timerElement.textContent = "00:00";
+                    }
+                }, 1000);
+            }
+
+            // 3. PROTEÇÃO ANTI-ESPIONAGEM (Básica)
+            document.addEventListener('contextmenu', e => e.preventDefault()); 
+            document.addEventListener('keydown', e => {
+                if (e.key === 'F12' || 
+                   (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+                   (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const myTid = urlParams.get('tid');
+
+            const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
+
+            buyLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    // Interrompe o clique para podermos limpar o link antes de enviar
+                    e.preventDefault(); 
+
+                    try {
+                        // Pega o link atual (com tudo que a Utmify já injetou)
+                        const finalUrl = new URL(this.href);
+
+                        // Cria um array com todos os parâmetros presentes no link do botão
+                        const paramsToClean = Array.from(finalUrl.searchParams.entries());
+                        
+                        // Percorre os parâmetros e higieniza os valores
+                        for (let [key, value] of paramsToClean) {
+                            let cleanedValue = value;
+                            
+                            // 1. Resolve o erro do SQL Injection (substitui traço duplo por simples)
+                            while(cleanedValue.includes('--')) {
+                                cleanedValue = cleanedValue.replace('--', '-');
+                            }
+                            
+                            // 2. Resolve erro de caractere inválido (substitui Pipe '|' por traço '-')
+                            cleanedValue = cleanedValue.replace(/\|/g, '-');
+
+                            // Atualiza o parâmetro na URL com o valor higienizado
+                            finalUrl.searchParams.set(key, cleanedValue);
+                        }
+
+                        // Garante que o TID principal da página (do Make/Cloaker) esteja presente
+                        if (myTid) {
+                            finalUrl.searchParams.set('tid', myTid);
+                        }
+                        
+                        // Remove especificamente a string raiz do fbclid por segurança de tamanho
+                        finalUrl.searchParams.delete('fbclid');
+
+                        // Redireciona para o checkout com a URL higienizada
+                        window.location.href = finalUrl.toString();
+                    } catch(err) {
+                        console.error("Erro ao sanitizar o link:", err);
+                        window.location.href = this.href; // Redirecionamento de emergência
+                    }
+                });
+            });
+        });
+    </script>
+    
+    <script>
+        // Mapeamento dos IDs do Vturb para os nomes amigáveis no tracking
+        const vturbMap = {
+            '69a319566d8aeabb2b202107': 'vsl_ml2prostatemax', // ID atual único
+            '69c6b0c35610b6167ac137b4': 'vsl_ml2prostatemaxHNR', // Exemplo A/B
+            '698f6662ceb26906d005e594': 'vsl_vickshealth5', // Exemplo A/B
+            '698f686392e29505e05d1cd5': 'vsl_vickshealth6', // Exemplo A/B
+        };
+    
+        // Ouve o evento nativo do VTurb quando o player está pronto
+        document.addEventListener('player:ready', function(event) {
+            var detail = event.detail || {};
+            var config = detail.config || {};
+            var activeId = config.id; 
+            var vslName = vturbMap[activeId];
+    
+            if (activeId && vslName) {
+                console.log("Vturb Active Video: " + vslName);
+
+                // A. Atualiza a URL do navegador para o lead (utm_content)
+                var currentUrl = new URL(window.location);
+                currentUrl.searchParams.set('utm_content', vslName);
+                window.history.replaceState({}, '', currentUrl);
+    
+                // B. Atualiza os Links de Compra (<a>) injetando o utm_content
+                var buttons = document.querySelectorAll('a[href]');
+                buttons.forEach(function(btn) {
+                    try {
+                        var href = btn.getAttribute('href');
+                        // Ignora links internos ou especiais
+                        if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:')) return;
+    
+                        var btnUrl = new URL(btn.href);
+                        btnUrl.searchParams.set('utm_content', vslName); 
+                        btn.href = btnUrl.toString();
+                    } catch (e) {
+                        // Ignora erros em URLs malformadas
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
