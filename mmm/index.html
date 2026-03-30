@@ -472,11 +472,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Pega o seu TID da planilha
             const urlParams = new URLSearchParams(window.location.search);
-            
-            // Pega o seu TID (Planilha) e o extclid (Utmify)
             const meuTid = urlParams.get('tid') || "";
-            const utmifyId = urlParams.get('extclid') || "";
 
             const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
 
@@ -485,22 +483,30 @@
                     e.preventDefault(); 
                     
                     try {
-                        // 1. Prepara a URL final de Checkout (A que você já usa)
-                        const checkoutUrl = new URL(this.href);
-                        if (meuTid) checkoutUrl.searchParams.set('tid', meuTid);
-                        if (utmifyId) checkoutUrl.searchParams.set('extclid', utmifyId);
+                        const originalUrl = new URL(this.href);
+                        const cleanUrl = new URL(originalUrl.origin + originalUrl.pathname);
 
-                        // 2. Encapsula tudo dentro de um HopLink de Redirecionamento Oficial
-                        // Isso registra o "Hop" e ativa o servidor de Postback S2S
-                        const hopLink = new URL("https://salecapu.hop.clickbank.net/");
-                        
-                        // Passamos o TID para o HopLink (Vital para a ClickBank S2S)
-                        if (meuTid) hopLink.searchParams.set('tid', meuTid);
-                        
-                        // O parâmetro 'destination' diz para a ClickBank: "Registre o clique e me mande pra cá"
-                        hopLink.searchParams.set('destination', checkoutUrl.toString());
+                        // 1. Passa os parâmetros estruturais obrigatórios da ClickBank
+                        const cbParams = ['affiliate', 'cbitems', 'template', 'cbfid', 'vq', 'hopId'];
+                        cbParams.forEach(p => {
+                            if (originalUrl.searchParams.has(p)) cleanUrl.searchParams.set(p, originalUrl.searchParams.get(p));
+                        });
 
-                        window.location.href = hopLink.toString();
+                        // 2. Injeta o seu TID intacto (Para o Make)
+                        if (meuTid) {
+                            cleanUrl.searchParams.set('tid', meuTid);
+                        }
+
+                        // 3. Puxa o EXTCLID da Utmify do botão e injeta limpo
+                        let utmifyId = originalUrl.searchParams.get('extclid') || "";
+                        if (utmifyId) {
+                            // Limpeza de segurança (remove pipes e traços duplos caso existam)
+                            utmifyId = utmifyId.replace(/\|/g, '-').replace(/-{2,}/g, '-');
+                            cleanUrl.searchParams.set('extclid', utmifyId);
+                        }
+
+                        // Vai para o checkout com um link curto, limpo e direto
+                        window.location.href = cleanUrl.toString();
                     } catch(err) {
                         window.location.href = this.href; 
                     }
