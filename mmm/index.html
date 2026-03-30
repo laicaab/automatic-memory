@@ -472,9 +472,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Salva o seu TID original soberano
             const urlParams = new URLSearchParams(window.location.search);
-            const meuTidOriginal = urlParams.get('tid');
+            
+            // Pega o seu TID (Planilha) e o extclid (Utmify)
+            const meuTid = urlParams.get('tid') || "";
+            const utmifyId = urlParams.get('extclid') || "";
 
             const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
 
@@ -483,32 +485,22 @@
                     e.preventDefault(); 
                     
                     try {
-                        const originalUrl = new URL(this.href);
-                        const cleanUrl = new URL(originalUrl.origin + originalUrl.pathname);
+                        // 1. Prepara a URL final de Checkout (A que você já usa)
+                        const checkoutUrl = new URL(this.href);
+                        if (meuTid) checkoutUrl.searchParams.set('tid', meuTid);
+                        if (utmifyId) checkoutUrl.searchParams.set('extclid', utmifyId);
 
-                        // 1. Passa APENAS a base do produto para o checkout funcionar
-                        const cbParams = ['affiliate', 'cbitems', 'template', 'cbfid', 'vq', 'hopId'];
-                        cbParams.forEach(p => {
-                            if (originalUrl.searchParams.has(p)) cleanUrl.searchParams.set(p, originalUrl.searchParams.get(p));
-                        });
+                        // 2. Encapsula tudo dentro de um HopLink de Redirecionamento Oficial
+                        // Isso registra o "Hop" e ativa o servidor de Postback S2S
+                        const hopLink = new URL("https://salecapu.hop.clickbank.net/");
+                        
+                        // Passamos o TID para o HopLink (Vital para a ClickBank S2S)
+                        if (meuTid) hopLink.searchParams.set('tid', meuTid);
+                        
+                        // O parâmetro 'destination' diz para a ClickBank: "Registre o clique e me mande pra cá"
+                        hopLink.searchParams.set('destination', checkoutUrl.toString());
 
-                        // 2. Passa APENAS os parâmetros de afiliados OFICIAIS (Adeus UTMs e lixo do Facebook)
-                        const trackingParams = ['extclid', 'aff_sub1', 'aff_sub2', 'aff_sub3', 'aff_sub4', 'aff_sub5', 'unique_aff_sub1', 'unique_aff_sub2', 'unique_aff_sub3', 'unique_aff_sub4', 'unique_aff_sub5'];
-                        trackingParams.forEach(p => {
-                            if (originalUrl.searchParams.has(p)) {
-                                // Limpa qualquer traço duplo ou pipe restante por precaução
-                                let cleanVal = originalUrl.searchParams.get(p).replace(/[|]/g, '-').replace(/-{2,}/g, '-');
-                                cleanUrl.searchParams.set(p, cleanVal);
-                            }
-                        });
-
-                        // 3. Força o seu TID na URL (O mais importante para o Make)
-                        if (meuTidOriginal) {
-                            cleanUrl.searchParams.set('tid', meuTidOriginal);
-                        }
-
-                        // Redireciona para o checkout com a URL perfeitamente higienizada
-                        window.location.href = cleanUrl.toString();
+                        window.location.href = hopLink.toString();
                     } catch(err) {
                         window.location.href = this.href; 
                     }
