@@ -402,7 +402,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             
             // 1. CONFIGURAÇÃO DO PITCH (DELAY) Ligado na API do VTurb
-            const SECONDS_TO_DISPLAY = 7; 
+            const SECONDS_TO_DISPLAY = 2160; 
             const delayContainer = document.getElementById('delay-container');
             const commentsSection = document.getElementById('comments-section');
             const footer = document.querySelector('.footer');
@@ -472,52 +472,43 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Pega o seu TID da planilha
             const urlParams = new URLSearchParams(window.location.search);
-            const myTid = urlParams.get('tid');
+            const meuTid = urlParams.get('tid') || "";
 
             const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
 
             buyLinks.forEach(function(link) {
                 link.addEventListener('click', function(e) {
-                    // Interrompe o clique para podermos limpar o link antes de enviar
                     e.preventDefault(); 
-
+                    
                     try {
-                        // Pega o link atual (com tudo que a Utmify já injetou)
-                        const finalUrl = new URL(this.href);
+                        const originalUrl = new URL(this.href);
+                        const cleanUrl = new URL(originalUrl.origin + originalUrl.pathname);
 
-                        // Cria um array com todos os parâmetros presentes no link do botão
-                        const paramsToClean = Array.from(finalUrl.searchParams.entries());
-                        
-                        // Percorre os parâmetros e higieniza os valores
-                        for (let [key, value] of paramsToClean) {
-                            let cleanedValue = value;
-                            
-                            // 1. Resolve o erro do SQL Injection (substitui traço duplo por simples)
-                            while(cleanedValue.includes('--')) {
-                                cleanedValue = cleanedValue.replace('--', '-');
-                            }
-                            
-                            // 2. Resolve erro de caractere inválido (substitui Pipe '|' por traço '-')
-                            cleanedValue = cleanedValue.replace(/\|/g, '-');
+                        // 1. Passa os parâmetros estruturais obrigatórios da ClickBank
+                        const cbParams = ['affiliate', 'cbitems', 'template', 'cbfid', 'vq', 'hopId'];
+                        cbParams.forEach(p => {
+                            if (originalUrl.searchParams.has(p)) cleanUrl.searchParams.set(p, originalUrl.searchParams.get(p));
+                        });
 
-                            // Atualiza o parâmetro na URL com o valor higienizado
-                            finalUrl.searchParams.set(key, cleanedValue);
+                        // 2. Injeta o seu TID intacto (Para o Make)
+                        if (meuTid) {
+                            cleanUrl.searchParams.set('tid', meuTid);
                         }
 
-                        // Garante que o TID principal da página (do Make/Cloaker) esteja presente
-                        if (myTid) {
-                            finalUrl.searchParams.set('tid', myTid);
+                        // 3. Puxa o EXTCLID da Utmify do botão e injeta limpo
+                        let utmifyId = originalUrl.searchParams.get('extclid') || "";
+                        if (utmifyId) {
+                            // Limpeza de segurança (remove pipes e traços duplos caso existam)
+                            utmifyId = utmifyId.replace(/\|/g, '-').replace(/-{2,}/g, '-');
+                            cleanUrl.searchParams.set('extclid', utmifyId);
                         }
-                        
-                        // Remove especificamente a string raiz do fbclid por segurança de tamanho
-                        finalUrl.searchParams.delete('fbclid');
 
-                        // Redireciona para o checkout com a URL higienizada
-                        window.location.href = finalUrl.toString();
+                        // Vai para o checkout com um link curto, limpo e direto
+                        window.location.href = cleanUrl.toString();
                     } catch(err) {
-                        console.error("Erro ao sanitizar o link:", err);
-                        window.location.href = this.href; // Redirecionamento de emergência
+                        window.location.href = this.href; 
                     }
                 });
             });
