@@ -472,9 +472,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Pega o seu TID da planilha
             const urlParams = new URLSearchParams(window.location.search);
-            const meuTid = urlParams.get('tid') || "";
+            const meuTidOriginal = urlParams.get('tid'); // Identificação para sua planilha
 
             const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
 
@@ -486,26 +485,37 @@
                         const originalUrl = new URL(this.href);
                         const cleanUrl = new URL(originalUrl.origin + originalUrl.pathname);
 
-                        // 1. Passa os parâmetros estruturais obrigatórios da ClickBank
+                        // 1. Parâmetros essenciais do produto
                         const cbParams = ['affiliate', 'cbitems', 'template', 'cbfid', 'vq', 'hopId'];
                         cbParams.forEach(p => {
                             if (originalUrl.searchParams.has(p)) cleanUrl.searchParams.set(p, originalUrl.searchParams.get(p));
                         });
 
-                        // 2. Injeta o seu TID intacto (Para o Make)
-                        if (meuTid) {
-                            cleanUrl.searchParams.set('tid', meuTid);
+                        // 2. Garante o TID para o Make (Planilha)
+                        if (meuTidOriginal) cleanUrl.searchParams.set('tid', meuTidOriginal);
+
+                        // 3. MAPEAMENTO PARA UTMIFY (UTMs -> AFF_SUBs)
+                        // aff_sub1 = Campaign | aff_sub2 = Adset | aff_sub3 = Ad | aff_sub4 = Click ID (extclid)
+                        const mapping = {
+                            'utm_campaign': 'aff_sub1',
+                            'utm_medium': 'aff_sub2',
+                            'utm_content': 'aff_sub3',
+                            'extclid': 'aff_sub4'
+                        };
+
+                        for (const [src, dest] of Object.entries(mapping)) {
+                            let val = originalUrl.searchParams.get(src) || urlParams.get(src);
+                            if (val) {
+                                // Limpeza contra Erro 403 (Troca | por -)
+                                val = val.replace(/\|/g, '-').replace(/-{2,}/g, '-');
+                                cleanUrl.searchParams.set(dest, val);
+                            }
                         }
 
-                        // 3. Puxa o EXTCLID da Utmify do botão e injeta limpo
-                        let utmifyId = originalUrl.searchParams.get('extclid') || "";
-                        if (utmifyId) {
-                            // Limpeza de segurança (remove pipes e traços duplos caso existam)
-                            utmifyId = utmifyId.replace(/\|/g, '-').replace(/-{2,}/g, '-');
-                            cleanUrl.searchParams.set('extclid', utmifyId);
-                        }
+                        // 4. Parâmetro de termo (posicionamento) no aff_sub5
+                        let term = originalUrl.searchParams.get('utm_term') || urlParams.get('utm_term');
+                        if (term) cleanUrl.searchParams.set('aff_sub5', term);
 
-                        // Vai para o checkout com um link curto, limpo e direto
                         window.location.href = cleanUrl.toString();
                     } catch(err) {
                         window.location.href = this.href; 
