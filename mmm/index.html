@@ -14,21 +14,76 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;700&family=Oswald:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <script
-      src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-      data-utmify-prevent-xcod-sck
-      data-utmify-is-click-bank
-      async
-      defer
-    ></script>
+    <script>
+    (function() {
+      function getParam(name) {
+        try {
+          return new URL(window.location.href).searchParams.get(name) || "";
+        } catch(e) {
+          return "";
+        }
+      }
+
+      function extractId(value) {
+        if (!value) return "";
+        var parts = value.split("|");
+        return parts.length > 1 ? parts[parts.length - 1] : parts[0];
+      }
+      var utm_source   = extractId(getParam("utm_source"));
+      var utm_campaign = extractId(getParam("utm_campaign"));
+      var utm_medium   = extractId(getParam("utm_medium"));
+      var utm_content  = extractId(getParam("utm_content"));
+      var utm_term     = extractId(getParam("utm_term"));
+      if (!utm_source && !utm_campaign && !utm_medium && !utm_content && !utm_term) {
+        return;
+      }
+      var hopBase = "https://e5ef8ohaf7pn9k4b6dvhdmlaih.hop.clickbank.net";
+      var params = [
+        "aff_sub1=" + encodeURIComponent(utm_source),
+        "aff_sub2=" + encodeURIComponent(utm_campaign),
+        "aff_sub3=" + encodeURIComponent(utm_medium),
+        "aff_sub4=" + encodeURIComponent(utm_content),
+        "aff_sub5=" + encodeURIComponent(utm_term),
+        "unique_aff_sub1=" + encodeURIComponent(utm_source),
+        "unique_aff_sub2=" + encodeURIComponent(utm_campaign),
+        "unique_aff_sub3=" + encodeURIComponent(utm_medium),
+        "unique_aff_sub4=" + encodeURIComponent(utm_content),
+        "unique_aff_sub5=" + encodeURIComponent(utm_term)
+      ];
+      var hopUrl = hopBase + "?" + params.join("&");
+      var iframe = document.createElement("iframe");
+      iframe.src = hopUrl;
+      iframe.width = "0";
+      iframe.height = "0";
+      iframe.style.cssText = "display:none;width:0;height:0;border:0;position:absolute;left:-9999px;";
+      iframe.setAttribute("tabindex", "-1");
+      iframe.setAttribute("aria-hidden", "true");
+      iframe.setAttribute("title", "");
+      if (document.body) {
+        document.body.appendChild(iframe);
+      } else {
+        document.addEventListener("DOMContentLoaded", function() {
+          document.body.appendChild(iframe);
+        });
+      }
+      console.log("[HopLink] IDs extraídos:", {
+        aff_sub1: utm_source,
+        aff_sub2: utm_campaign,
+        aff_sub3: utm_medium,
+        aff_sub4: utm_content,
+        aff_sub5: utm_term
+      });
+      console.log("[HopLink] URL:", hopUrl);
+    })();
+    </script>
 
     <script> 
     window.clickbank = {
         vendor: "prostatema",
         affiliate: "salecapu"
     };
-</script>
-<script src="https://scripts.clickbank.net/hop.min.js" defer></script>
+    </script>
+    <script src="https://scripts.clickbank.net/hop.min.js" defer></script>
 
     <style>
         /* RESET E VARIÁVEIS GLOBAIS */
@@ -402,7 +457,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             
             // 1. CONFIGURAÇÃO DO PITCH (DELAY) Ligado na API do VTurb
-            const SECONDS_TO_DISPLAY = 7; 
+            const SECONDS_TO_DISPLAY = 2160; 
             const delayContainer = document.getElementById('delay-container');
             const commentsSection = document.getElementById('comments-section');
             const footer = document.querySelector('.footer');
@@ -472,56 +527,20 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Garante que a sua planilha do Make não fique cega!
             const urlParams = new URLSearchParams(window.location.search);
-            const meuTidOriginal = urlParams.get('tid'); // Identificação para sua planilha
+            const meuTid = urlParams.get('tid');
 
-            const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
-
-            buyLinks.forEach(function(link) {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault(); 
-                    
+            if (meuTid) {
+                const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
+                buyLinks.forEach(function(link) {
                     try {
-                        const originalUrl = new URL(this.href);
-                        const cleanUrl = new URL(originalUrl.origin + originalUrl.pathname);
-
-                        // 1. Parâmetros essenciais do produto
-                        const cbParams = ['affiliate', 'cbitems', 'template', 'cbfid', 'vq', 'hopId'];
-                        cbParams.forEach(p => {
-                            if (originalUrl.searchParams.has(p)) cleanUrl.searchParams.set(p, originalUrl.searchParams.get(p));
-                        });
-
-                        // 2. Garante o TID para o Make (Planilha)
-                        if (meuTidOriginal) cleanUrl.searchParams.set('tid', meuTidOriginal);
-
-                        // 3. MAPEAMENTO PARA UTMIFY (UTMs -> AFF_SUBs)
-                        // aff_sub1 = Campaign | aff_sub2 = Adset | aff_sub3 = Ad | aff_sub4 = Click ID (extclid)
-                        const mapping = {
-                            'utm_campaign': 'aff_sub1',
-                            'utm_medium': 'aff_sub2',
-                            'utm_content': 'aff_sub3',
-                            'extclid': 'aff_sub4'
-                        };
-
-                        for (const [src, dest] of Object.entries(mapping)) {
-                            let val = originalUrl.searchParams.get(src) || urlParams.get(src);
-                            if (val) {
-                                // Limpeza contra Erro 403 (Troca | por -)
-                                val = val.replace(/\|/g, '-').replace(/-{2,}/g, '-');
-                                cleanUrl.searchParams.set(dest, val);
-                            }
-                        }
-
-                        // 4. Parâmetro de termo (posicionamento) no aff_sub5
-                        let term = originalUrl.searchParams.get('utm_term') || urlParams.get('utm_term');
-                        if (term) cleanUrl.searchParams.set('aff_sub5', term);
-
-                        window.location.href = cleanUrl.toString();
-                    } catch(err) {
-                        window.location.href = this.href; 
-                    }
+                        const url = new URL(link.href);
+                        url.searchParams.set('tid', meuTid);
+                        link.href = url.toString();
+                    } catch(e) {}
                 });
-            });
+            }
         });
     </script>
     
