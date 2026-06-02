@@ -14,88 +14,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;700&family=Oswald:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <script>
-(function() {
-  function getParam(name) {
-    try {
-      return new URL(window.location.href).searchParams.get(name) || "";
-    } catch(e) {
-      return "";
-    }
-  }
-
-  function extractId(value) {
-    if (!value) return "";
-    var parts = value.split("|");
-    return parts.length > 1 ? parts[parts.length - 1] : parts[0];
-  }
-  
-  var utm_source   = extractId(getParam("utm_source"));
-  var utm_campaign = extractId(getParam("utm_campaign"));
-  var utm_medium   = extractId(getParam("utm_medium"));
-  var utm_content  = extractId(getParam("utm_content"));
-  var utm_term     = extractId(getParam("utm_term"));
-  var tid          = getParam("tid"); // ADIÇÃO 1: Captura o seu TID da URL
-
-  // ADIÇÃO 2: Garante que o Iframe rode se houver TID, mesmo sem as UTMs
-  if (!utm_source && !utm_campaign && !utm_medium && !utm_content && !utm_term && !tid) {
-    return;
-  }
-  
-  var hopBase = "https://e5ef8ohaf7pn9k4b6dvhdmlaih.hop.clickbank.net";
-  var params = [
-    "aff_sub1=" + encodeURIComponent(utm_source),
-    "aff_sub2=" + encodeURIComponent(utm_campaign),
-    "aff_sub3=" + encodeURIComponent(utm_medium),
-    "aff_sub4=" + encodeURIComponent(utm_content),
-    "aff_sub5=" + encodeURIComponent(utm_term),
-    "unique_aff_sub1=" + encodeURIComponent(utm_source),
-    "unique_aff_sub2=" + encodeURIComponent(utm_campaign),
-    "unique_aff_sub3=" + encodeURIComponent(utm_medium),
-    "unique_aff_sub4=" + encodeURIComponent(utm_content),
-    "unique_aff_sub5=" + encodeURIComponent(utm_term)
-  ];
-  
-  // ADIÇÃO 3: Injeta o seu TID no pacote de dados da Utmify
-  if (tid) {
-      params.push("tid=" + encodeURIComponent(tid));
-  }
-
-  var hopUrl = hopBase + "?" + params.join("&");
-  var iframe = document.createElement("iframe");
-  iframe.src = hopUrl;
-  iframe.width = "0";
-  iframe.height = "0";
-  iframe.style.cssText = "display:none;width:0;height:0;border:0;position:absolute;left:-9999px;";
-  iframe.setAttribute("tabindex", "-1");
-  iframe.setAttribute("aria-hidden", "true");
-  iframe.setAttribute("title", "");
-  if (document.body) {
-    document.body.appendChild(iframe);
-  } else {
-    document.addEventListener("DOMContentLoaded", function() {
-      document.body.appendChild(iframe);
-    });
-  }
-  console.log("[HopLink] IDs extraídos:", {
-    aff_sub1: utm_source,
-    aff_sub2: utm_campaign,
-    aff_sub3: utm_medium,
-    aff_sub4: utm_content,
-    aff_sub5: utm_term,
-    tid: tid // Adicionado ao log para você conferir no console (F12)
-  });
-  console.log("[HopLink] URL:", hopUrl);
-})();
-</script>
-
-    <script> 
-    window.clickbank = {
-        vendor: "prostatema",
-        affiliate: "salecapu"
-    };
-    </script>
-    <script src="https://scripts.clickbank.net/hop.min.js" defer></script>
+    <!-- SCRIPT DE RASTREIO BUYGOODS -->
+    <script>var mysrc = "https://tracking.buygoods.com/track/?a=11100&firstcookie=0"+"&tracking_redirect=&referrer="+encodeURIComponent(document.referrer)+"&sessid2="+ReadCookie('sessid2')+"&product=PP_PRT2UNITS_AFF,PP_PRT3UNITS_AFF,PP_PRT6UNITS_AFF&vid1=&vid2=&vid3=&caller_url="+encodeURIComponent(window.location.href); if(typeof add_to_cart !== 'undefined') { mysrc = mysrc+'&add_to_cart='+add_to_cart; } var newScript = document.createElement('script'); newScript.type = 'text/javascript'; newScript.defer = true; newScript.src = mysrc; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(newScript, s); function ReadCookie(name){name += '='; var parts = document.cookie.split(/;\s*/);for (var i = 0; i < parts.length; i++) {var part = parts[i]; if (part.indexOf(name) == 0) return part.substring(name.length)} return '';}</script>
+    <script type="text/javascript">setTimeout(function () {var i = document.createElement("iframe"),oid = new URLSearchParams(window.location.search);i.async = true;i.style="display:none";i.setAttribute("src", "https://buygoods.com/affiliates/go/conversion/iframe/bg?a=11100&t=b3fdf7bff514e97287a6a94f57e56441&s="+ReadCookie('sessid2'));document.body.appendChild(i);}, 1000);</script>
+    <!-- FIM DO SCRIPT BUYGOODS -->
 
     <style>
         /* RESET E VARIÁVEIS GLOBAIS */
@@ -261,7 +183,7 @@
         </div>
 
         <div class="video-wrapper">
-            <vturb-smartplayer id="vid-69d569e6b88719b10eb82d58" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer> <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/players/69d569e6b88719b10eb82d58/v4/player.js", s.async=!0,document.head.appendChild(s); </script>
+            <vturb-smartplayer id="vid-69c6b0c35610b6167ac137b4" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer> <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/10d15ba1-6af1-4ff4-a726-9a64f39ff19d/players/69c6b0c35610b6167ac137b4/v4/player.js", s.async=!0,document.head.appendChild(s); </script>
         </div>
 
     </div>
@@ -384,7 +306,8 @@
             </ul>
             <p style="color: #ffeb3b; font-size: 15px; font-weight: 700; margin-top: 15px; line-height: 1.2;">60 DAYS GUARANTEE<br>+ SURPRISE 🎁</p>
             
-            <a href="https://prostatema.pay.clickbank.net/?affiliate=salecapu&cbitems=PP-PRT6UNITS-AFF&template=prt6units&cbfid=62463" class="btn-buy">BUY NOW</a>
+            <!-- Link de 6 Potes BuyGoods -->
+            <a href="https://buygoods.com/secure/checkout.html?account_id=11100&product_codename=PP_PRT6UNITS_AFF&redirect=aHR0cHM6Ly9pbXByb3ZpbmdvdXJoZWFsdGguY29tL3BydC1hZmYtYnV5LXVwMS8=&aff_id=14023" class="btn-buy">BUY NOW</a>
             
             <img src="prostate/cards-1-2-2-1-1-1.webp" alt="Cards" class="cards-img">
             <p class="offer-total" style="color:#00e676;">+FREE SHIPPING</p>
@@ -411,7 +334,8 @@
                 <li><span>✓</span> 60 DAYS GUARANTEE</li>
             </ul>
             
-            <a href="https://prostatema.pay.clickbank.net/?affiliate=salecapu&cbitems=PP-PRT3UNITS-AFF&template=prt3units&cbfid=62463" class="btn-buy">BUY NOW</a>
+            <!-- Link de 3 Potes BuyGoods -->
+            <a href="https://buygoods.com/secure/checkout.html?account_id=11100&product_codename=PP_PRT3UNITS_AFF&redirect=aHR0cHM6Ly9pbXByb3ZpbmdvdXJoZWFsdGguY29tL3BydC1hZmYtYnV5LXVwMS8=&aff_id=14023" class="btn-buy">BUY NOW</a>
             
             <img src="prostate/cards-1-2-2-1-1-1.webp" alt="Cards" class="cards-img">
             <p class="offer-total">TOTAL: <strike>$294</strike> $207<br><span style="color:#cc0000;">+FREE</span> SHIPPING</p>
@@ -437,7 +361,8 @@
                 <li><span>✓</span> 60 DAYS GUARANTEE</li>
             </ul>
             
-            <a href="https://prostatema.pay.clickbank.net/?affiliate=salecapu&cbitems=PP-PRT2UNITS-AFF&template=prt2units&cbfid=62463" class="btn-buy">BUY NOW</a>
+            <!-- Link de 2 Potes BuyGoods -->
+            <a href="https://buygoods.com/secure/checkout.html?account_id=11100&product_codename=PP_PRT2UNITS_AFF&redirect=aHR0cHM6Ly9pbXByb3ZpbmdvdXJoZWFsdGguY29tL3BydC1hZmYtYnV5LXVwMS8=&aff_id=14023" class="btn-buy">BUY NOW</a>
             
             <img src="prostate/cards-1-2-2-1-1-1.webp" alt="Cards" class="cards-img">
             <p class="offer-total">TOTAL: <strike>$217</strike> $158<br>+ $9.99 SHIPPING</p>
@@ -469,7 +394,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             
             // 1. CONFIGURAÇÃO DO PITCH (DELAY) Ligado na API do VTurb
-            const SECONDS_TO_DISPLAY = 2160; 
+            const SECONDS_TO_DISPLAY = 7; 
             const delayContainer = document.getElementById('delay-container');
             const commentsSection = document.getElementById('comments-section');
             const footer = document.querySelector('.footer');
@@ -539,16 +464,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Garante que a sua planilha do Make não fique cega!
+            // Captura o TID que vem da sua URL do Facebook
             const urlParams = new URLSearchParams(window.location.search);
             const meuTid = urlParams.get('tid');
 
             if (meuTid) {
-                const buyLinks = document.querySelectorAll('a[href*="pay.clickbank.net"]');
+                // Seleciona todos os links da BuyGoods
+                const buyLinks = document.querySelectorAll('a[href*="buygoods.com"]');
                 buyLinks.forEach(function(link) {
                     try {
                         const url = new URL(link.href);
-                        url.searchParams.set('tid', meuTid);
+                        // Injeta o parâmetro 'subid' com o valor do seu TID nas URLs de Checkout da BuyGoods
+                        url.searchParams.set('subid', meuTid);
                         link.href = url.toString();
                     } catch(e) {}
                 });
